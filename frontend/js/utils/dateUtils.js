@@ -47,10 +47,7 @@ export function getWeekDates(date) {
     const monday = new Date(date);
     const dayOfWeek = monday.getDay();
     
-    // If it's already Monday (1), don't adjust
-    // For Sunday (0), go back 6 days
-    // For other days, go back to the previous Monday
-    console.log(dayOfWeek);
+  
     const daysToSubtract = dayOfWeek === 0 ? -1 : dayOfWeek === 6 ? 5 : dayOfWeek - 1;
     monday.setDate(monday.getDate() - daysToSubtract);
     
@@ -60,5 +57,6 @@ export function getWeekDates(date) {
         day.setDate(monday.getDate() + i);
         dates.push(day);
     }
+    console.log(dates);
     return dates;
 } 
