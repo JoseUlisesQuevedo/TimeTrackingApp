@@ -1,20 +1,14 @@
 import { getWeekDates, formatDate, formatWeekDisplay, formatDateForInput } from './frontend/js/utils/dateUtils.js';
 import { formatTimeDisplay, getTimeInHours } from './frontend/js/utils/timeUtils.js';
+import { updateTotalHours } from './frontend/js/services/timeEntries.js';
 import { saveTimeEntries } from './frontend/js/services/timeEntries.js';
 import { ProjectRow } from './frontend/js/components/projectRow.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    function updateTotalHours() {
-        let total = 0;
-        document.querySelectorAll('.time-input').forEach(timeInput => {
-            const hoursInput = timeInput.querySelector('.hours-input');
-            const minutesInput = timeInput.querySelector('.minutes-input');
-            total += getTimeInHours(hoursInput, minutesInput);
-        });
-        document.getElementById('total-hours').textContent = formatTimeDisplay(total);
-    }
+    
 
-    const projectRowManager = new ProjectRow(updateTotalHours);
+    const projectRowManager = new ProjectRow();
+
     console.log("projectRowManager created");
     // Function to refresh empty row when returning to the page
     function refreshEmptyRow() {
