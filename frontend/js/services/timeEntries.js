@@ -1,5 +1,16 @@
 import { getTimeInHours } from '../utils/timeUtils.js';
 
+
+export function updateTotalHours() {
+    let total = 0;
+    document.querySelectorAll('.time-input').forEach(timeInput => {
+        const hoursInput = timeInput.querySelector('.hours-input');
+        const minutesInput = timeInput.querySelector('.minutes-input');
+        total += getTimeInHours(hoursInput, minutesInput);
+    });
+    document.getElementById('total-hours').textContent = formatTimeDisplay(total);
+}
+
 export function saveTimeEntries(projectRows) {
     const entries = [];
     projectRows.forEach((row, projectId) => {
