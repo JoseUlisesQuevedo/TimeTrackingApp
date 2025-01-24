@@ -1,9 +1,9 @@
 import { getTimeInHours } from '../utils/timeUtils.js';
+import { updateTotalHours } from '../services/timeEntries.js';
 
 export class ProjectRow {
-    constructor(updateTotalHours) {
+    constructor() {
         this.projectRows = new Map();
-        this.updateTotalHours = updateTotalHours;
     }
 
     createEmptyRow() {
@@ -86,7 +86,7 @@ export class ProjectRow {
         row.querySelector('.remove-project').addEventListener('click', () => {
             row.remove();
             this.projectRows.delete(projectId);
-            this.updateTotalHours();
+            updateTotalHours();
             
             // Check if we need to add a new empty row
             if (!document.querySelector('.empty-row')) {
@@ -103,7 +103,7 @@ export class ProjectRow {
 
         hoursInput.addEventListener('input', () => {
             if (hoursInput.value < 0) hoursInput.value = 0;
-            this.updateTotalHours();
+            updateTotalHours();
         });
 
         minutesInput.addEventListener('input', () => {
@@ -113,7 +113,7 @@ export class ProjectRow {
             if (val >= 0 && val <= 9) {
                 minutesInput.value = minutesInput.value.padStart(2, '0');
             }
-            this.updateTotalHours();
+            updateTotalHours();
         });
     }
 
