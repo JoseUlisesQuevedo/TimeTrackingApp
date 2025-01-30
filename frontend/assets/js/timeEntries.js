@@ -1,4 +1,4 @@
-import { getTimeInHours } from '../utils/timeUtils.js';
+import { getTimeInHours } from './timeUtils.js';
 
 
 export function updateTotalHours() {

@@ -1,8 +1,8 @@
-import { getWeekDates, formatDate, formatWeekDisplay, formatDateForInput } from './frontend/js/utils/dateUtils.js';
-import { formatTimeDisplay, getTimeInHours } from './frontend/js/utils/timeUtils.js';
-import { updateTotalHours } from './frontend/js/services/timeEntries.js';
-import { saveTimeEntries } from './frontend/js/services/timeEntries.js';
-import { ProjectRow } from './frontend/js/components/projectRow.js';
+import { getWeekDates, formatDate, formatWeekDisplay, formatDateForInput } from './dateUtils.js';
+import { formatTimeDisplay, getTimeInHours } from './timeUtils.js';
+import { updateTotalHours } from './timeEntries.js';
+import { saveTimeEntries } from './timeEntries.js';
+import { ProjectRow } from './projectRow.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     

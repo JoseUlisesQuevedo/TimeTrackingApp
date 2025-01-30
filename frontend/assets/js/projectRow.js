@@ -1,5 +1,5 @@
-import { getTimeInHours } from '../utils/timeUtils.js';
-import { updateTotalHours } from '../services/timeEntries.js';
+import { getTimeInHours } from './timeUtils.js';
+import { updateTotalHours } from './timeEntries.js';
 
 export class ProjectRow {
     constructor() {
