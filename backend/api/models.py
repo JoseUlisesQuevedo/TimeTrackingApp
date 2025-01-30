@@ -45,7 +45,7 @@ class TimeEntry(models.Model):
     #How many minutes in that day
     duration = models.FloatField()
     #Who registers the time
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='time_entries')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='time_entries')
     #To which project
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='time_entries')
     #For what day
