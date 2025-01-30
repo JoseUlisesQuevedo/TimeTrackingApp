@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer
+from .serializers import UserSerializer, ProjectSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Project
+
 
 class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -19,4 +20,15 @@ class ProjectListCreate(generics.ListCreateAPIView):
         return queryset
     
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        if serializer.is_valid():  
+            serializer.save(created_by=self.request.user)
+        else:
+            print(serializer.errors)
+
+class ProjectDelete(generics.DestroyAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def perform_destroy(self, instance):
+        instance.delete()
