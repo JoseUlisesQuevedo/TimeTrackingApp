@@ -6,13 +6,13 @@ class Project(models.Model):
 
     #Project description
     project_name = models.CharField(max_length=100)
-    description = models.TextField()
-    start_date = models.DateField()
-    end_date = models.DateField()
+    description = models.TextField(null=True)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
 
     #Project responsabilities
-    tech_lead = models.ForeignKey(User, on_delete=models.CASCADE)
-    business_lead = models.ForeignKey(User, on_delete=models.CASCADE)
+    tech_lead = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tech_lead_projects',null=True)
+    business_lead = models.ForeignKey(User, on_delete=models.CASCADE,related_name = 'business_lead_projects',null=True)
 
     #Area and status
     AREA_CHOICES = [
@@ -21,17 +21,17 @@ class Project(models.Model):
         ('OTH', 'Other')
     ]
     area = models.CharField(
-    max_length=3, choices=AREA_CHOICES)
+    max_length=3, choices=AREA_CHOICES,null=True,default='OTH')
 
     STATUS_CHOICES = [
         ('A', 'Active'),
         ('OH', 'On hold'),
         ('C', 'Completed')]
     status = models.CharField(
-    max_length=3, choices=STATUS_CHOICES)
+    max_length=3, choices=STATUS_CHOICES,null=True,default='OH')
 
     #Metadata    
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_projects')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
