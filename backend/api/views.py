@@ -20,7 +20,7 @@ class TimeEntryListCreate(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         if serializer.is_valid():
-            serializer.save(user_id=self.request.user)
+            serializer.save(user=self.request.user)
         else:
             print(serializer.errors)
 
