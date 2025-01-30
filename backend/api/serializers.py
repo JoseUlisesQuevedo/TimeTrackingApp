@@ -15,8 +15,8 @@ class UserSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ["project_name", "description", "start_date", "end_date", "tech_lead", "business_lead", "area", "status"]
-        read_only_fields = ['created_by', 'created_at', 'updated_at']
+        fields = ["id","project_name", "description", "start_date", "end_date", "tech_lead", "business_lead", "area", "status"]
+        read_only_fields = ["id",'created_by', 'created_at', 'updated_at']
         extra_kwargs = {'project_name': {'required': True}, 'end_date': {'required': False}}
 
 class TimeEntrySerializer(serializers.ModelSerializer):
