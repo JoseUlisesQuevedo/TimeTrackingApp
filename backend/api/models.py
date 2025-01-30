@@ -17,6 +17,8 @@ class Project(models.Model):
     #Area and status
     AREA_CHOICES = [
         ('C', 'Consulting'),
+        ('RI', 'Research Initiative'),
+        #Things like learning or mentorship
         ('II', 'Internal Initiative'),
         ('OTH', 'Other')
     ]
