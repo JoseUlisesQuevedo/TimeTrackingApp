@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from .models import Project
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,3 +11,10 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+    
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ["project_name", "description", "start_date", "end_date", "tech_lead", "business_lead", "area", "status"]
+        read_only_fields = ['created_by', 'created_at', 'updated_at']
+        extra_kwargs = {'project_name': {'required': True}}
