@@ -1,15 +1,29 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer, ProjectSerializer
+from .serializers import UserSerializer, ProjectSerializer, TimeEntrySerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import Project
+from .models import Project, TimeEntry
 
 
 class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 # Create your views here.
+
+class TimeEntryListCreate(generics.ListCreateAPIView):
+    serializer_class = TimeEntrySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return TimeEntry.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            serializer.save(user_id=self.request.user)
+        else:
+            print(serializer.errors)
+
 
 class ProjectListCreate(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
