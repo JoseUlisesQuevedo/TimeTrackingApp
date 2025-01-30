@@ -24,6 +24,13 @@ class TimeEntryListCreate(generics.ListCreateAPIView):
         else:
             print(serializer.errors)
 
+class TimeEntryUpdate(generics.RetrieveUpdateAPIView):
+
+    def get_queryset(self):
+        return TimeEntry.objects.filter(user=self.request.user)
+   
+    serializer_class = TimeEntrySerializer
+    permission_classes = [IsAuthenticated]
 
 class ProjectListCreate(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
