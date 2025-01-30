@@ -12,12 +12,11 @@ class CreateUserView(generics.CreateAPIView):
 # Create your views here.
 
 class ProjectListCreate(generics.ListCreateAPIView):
-    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return queryset
+        return Project.objects.all()
     
     def perform_create(self, serializer):
         if serializer.is_valid():  
