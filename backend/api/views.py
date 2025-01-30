@@ -45,3 +45,8 @@ class ProjectDelete(generics.DestroyAPIView):
     
     def perform_destroy(self, instance):
         instance.delete()
+
+class ProjectUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]  # Requires authentication
