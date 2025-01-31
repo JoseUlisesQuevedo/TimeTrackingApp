@@ -1,14 +1,38 @@
+import api from './api.js';
+
+
+async function getProjects() {
+    try {
+        const response = await api.get('projects/');
+        if (response.status===200) {
+            return await response.data;
+        }
+        throw new Error('Failed to get projects');
+    } catch (error) {
+        console.error('Error getting projects:', error);
+        return [];
+    }
+}
+
+async function formatProjects() {
+
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
+
     const projectForm = document.getElementById('project-form');
     const projectsList = document.getElementById('projects-list');
     let editingProjectId = null;
     
-    // Load existing projects from localStorage
-    let projects = JSON.parse(localStorage.getItem('projects')) || [];
+    // Get projects from the API
+    console.log('Getting projects...');
+    let projects = getProjects();
+    console.log(projects);
 
-    function saveProjects() {
-        localStorage.setItem('projects', JSON.stringify(projects));
-    }
+    projects = [];
+
+
 
     function createProjectCard(project) {
         const card = document.createElement('div');
@@ -63,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return card;
     }
+
 
     function populateFormForEdit(project) {
         document.getElementById('project-name').value = project.name;
