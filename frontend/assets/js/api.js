@@ -1,4 +1,5 @@
 import { ACCESS_TOKEN } from "./constants.js";
+import { CACHE_EXPIRY } from "./constants.js";
 
 
 const api = axios.create({
@@ -24,4 +25,43 @@ api.interceptors.request.use(
 
 
 export default api;
+
+
+export async function fetchUsers() {
+    
+    const cachedUsers = JSON.parse(localStorage.getItem("cached_users"));
+    const cacheTime = localStorage.getItem("user_cache_timestamp");
+
+    if (cachedUsers && cacheTime && Date.now() - cacheTime < CACHE_EXPIRY) {
+        console.log("Using cached users");
+        return cachedUsers;
+    }
+
+    try {
+        const response = await api.get('users/');
+        if (response.status===200) {
+            return await response.data;
+        }
+        throw new Error('Failed to get users');
+    } catch (error) {
+        console.error('Error getting users:', error);
+        return [];
+    }
+}
+
+
+//Gets the projects from the BD and stores them / updates them in the local storage
+export async function fetchProjects() {
+    try {
+        const response = await api.get('projects/');
+        if (response.status===200) {
+            return await response.data;
+             
+        }
+        throw new Error('Failed to get projects');
+    } catch (error) {
+        console.error('Error getting projects:', error);
+        return [];
+    }
+}
 
