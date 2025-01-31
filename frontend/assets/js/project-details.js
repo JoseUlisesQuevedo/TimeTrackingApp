@@ -1,5 +1,18 @@
 import api from './api.js';
+import { AREA_MAPPING, STATUS_MAPPING, CACHE_EXPIRY } from './constants.js';
 
+async function getUsers() {
+    try {
+        const response = await api.get('users/');
+        if (response.status===200) {
+            return await response.data;
+        }
+        throw new Error('Failed to get users');
+    } catch (error) {
+        console.error('Error getting users:', error);
+        return [];
+    }
+}
 
 async function getProjects() {
     try {
@@ -14,12 +27,47 @@ async function getProjects() {
     }
 }
 
-async function formatProjects() {
+//TODO: Change username to name when model is updated
+function formatProjects(projects,users) {
 
+    return projects.map(project => {
+        const techLead = users.find(user => user.id === project.tech_lead);
+        const businessLead = users.find(user => user.id === project.business_lead);
+        return {
+            ...project,
+            techLead: techLead ? techLead.username : 'None',
+            businessLead: businessLead ? businessLead.username : 'None',
+            area: AREA_MAPPING[project.area] || 'Unknown',
+            status: STATUS_MAPPING[project.status] || 'Unknown'
+        };
+    });
 }
 
 
-document.addEventListener('DOMContentLoaded', () => {
+async function fetchUsers() {
+    const cachedUsers = JSON.parse(localStorage.getItem("cached_users"));
+    const cacheTime = localStorage.getItem("user_cache_timestamp");
+
+    if (cachedUsers && cacheTime && Date.now() - cacheTime < CACHE_EXPIRY) {
+        console.log("Using cached users");
+        return cachedUsers;
+    }
+
+    try {
+        const users = await getUsers();
+    
+        localStorage.setItem("cached_users", JSON.stringify(users));
+        localStorage.setItem("user_cache_timestamp", Date.now()); // Save timestamp
+        console.log("Fetched users from API");
+        return users;
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return [];
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', async () => {
 
     const projectForm = document.getElementById('project-form');
     const projectsList = document.getElementById('projects-list');
@@ -27,23 +75,31 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Get projects from the API
     console.log('Getting projects...');
-    let projects = getProjects();
+    let projects = await getProjects();
     console.log(projects);
 
-    projects = [];
+    // Get users from the API
+    console.log('Getting users...');
+    let users = await fetchUsers();
+    console.log(users);
 
 
+    projects = formatProjects(projects, users);
+    localStorage.setItem("formatted_projects",JSON.stringify(projects));
+
+
+    
 
     function createProjectCard(project) {
         const card = document.createElement('div');
         card.className = 'project-card';
         
-        const statusClass = `status-${project.status}`;
-        const dates = formatProjectDates(project.startDate, project.endDate);
+        const statusClass = `status-${project.status.toLowerCase().replace(" ","-")}`;
+        const dates = formatProjectDates(project.start_date, project.end_date);
 
         card.innerHTML = `
             <div class="project-card-header">
-                <h3 class="project-card-title">${project.name}</h3>
+                <h3 class="project-card-title">${project.project_name}</h3>
                 <span class="project-status ${statusClass}">${capitalizeFirstLetter(project.status)}</span>
             </div>
             <div class="project-card-body">
@@ -90,10 +146,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function populateFormForEdit(project) {
-        document.getElementById('project-name').value = project.name;
+        document.getElementById('project-name').value = project.project_name;
         document.getElementById('project-description').value = project.description || '';
-        document.getElementById('project-start').value = project.startDate || '';
-        document.getElementById('project-end').value = project.endDate || '';
+        document.getElementById('project-start').value = project.start_date || '';
+        document.getElementById('project-end').value = project.end_date || '';
         document.getElementById('project-status').value = project.status;
         
         // Find and select the correct option for tech lead and business lead
@@ -152,10 +208,10 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const projectData = {
-            name: document.getElementById('project-name').value,
+            project_name: document.getElementById('project-name').value,
             description: document.getElementById('project-description').value,
-            startDate: document.getElementById('project-start').value,
-            endDate: document.getElementById('project-end').value,
+            start_date: document.getElementById('project-start').value,
+            end_date: document.getElementById('project-end').value,
             status: document.getElementById('project-status').value,
             techLead: document.getElementById('tech-lead').options[
                 document.getElementById('tech-lead').selectedIndex
