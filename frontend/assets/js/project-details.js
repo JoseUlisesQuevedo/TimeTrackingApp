@@ -14,11 +14,13 @@ async function getUsers() {
     }
 }
 
-async function getProjects() {
+//Gets the projects from the BD and stores them / updates them in the local storage
+async function fetchProjects() {
     try {
         const response = await api.get('projects/');
         if (response.status===200) {
-            return await response.data;
+            let projects = await response.data;
+            localStorage.setItem("cached_projects", JSON.stringify(projects));
         }
         throw new Error('Failed to get projects');
     } catch (error) {
@@ -75,8 +77,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Get projects from the API
     console.log('Getting projects...');
-    let projects = await getProjects();
-    console.log(projects);
+    fetchProjects();
+    let projects = JSON.parse(localStorage.getItem("cached_projects"));
 
     // Get users from the API
     console.log('Getting users...');
@@ -126,8 +128,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
 
         card.querySelector('.delete-project').addEventListener('click', () => {
-            if (confirm('Are you sure you want to delete this project?')) {
+            if (confirm(`Are you sure you want to delete this project?`)) {
                 projects = projects.filter(p => p.id !== project.id);
+                fetchProjects();
                 saveProjects();
                 renderProjects();
             }
