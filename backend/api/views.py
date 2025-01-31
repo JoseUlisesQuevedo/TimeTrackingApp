@@ -10,6 +10,10 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 # Create your views here.
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
 class TimeEntryListCreate(generics.ListCreateAPIView):
     serializer_class = TimeEntrySerializer
