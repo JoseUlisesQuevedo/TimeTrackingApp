@@ -1,37 +1,8 @@
-import api from './api.js';
-import { AREA_MAPPING, STATUS_MAPPING, CACHE_EXPIRY } from './constants.js';
-
-async function getUsers() {
-    try {
-        const response = await api.get('users/');
-        if (response.status===200) {
-            return await response.data;
-        }
-        throw new Error('Failed to get users');
-    } catch (error) {
-        console.error('Error getting users:', error);
-        return [];
-    }
-}
-
-//Gets the projects from the BD and stores them / updates them in the local storage
-async function fetchProjects() {
-    try {
-        const response = await api.get('projects/');
-        if (response.status===200) {
-            let projects = await response.data;
-            localStorage.setItem("cached_projects", JSON.stringify(projects));
-        }
-        throw new Error('Failed to get projects');
-    } catch (error) {
-        console.error('Error getting projects:', error);
-        return [];
-    }
-}
+import { fetchProjects, fetchUsers } from './api.js';
+import { AREA_MAPPING, STATUS_MAPPING } from './constants.js';
 
 //TODO: Change username to name when model is updated
-function formatProjects(projects,users) {
-
+function formatProjects(projects, users) {
     return projects.map(project => {
         const techLead = users.find(user => user.id === project.tech_lead);
         const businessLead = users.find(user => user.id === project.business_lead);
@@ -45,52 +16,29 @@ function formatProjects(projects,users) {
     });
 }
 
-
-async function fetchUsers() {
-    const cachedUsers = JSON.parse(localStorage.getItem("cached_users"));
-    const cacheTime = localStorage.getItem("user_cache_timestamp");
-
-    if (cachedUsers && cacheTime && Date.now() - cacheTime < CACHE_EXPIRY) {
-        console.log("Using cached users");
-        return cachedUsers;
-    }
-
-    try {
-        const users = await getUsers();
-    
-        localStorage.setItem("cached_users", JSON.stringify(users));
-        localStorage.setItem("user_cache_timestamp", Date.now()); // Save timestamp
-        console.log("Fetched users from API");
-        return users;
-    } catch (error) {
-        console.error("Error fetching users:", error);
-        return [];
-    }
-}
-
-
 document.addEventListener('DOMContentLoaded', async () => {
-
     const projectForm = document.getElementById('project-form');
     const projectsList = document.getElementById('projects-list');
     let editingProjectId = null;
-    
-    // Get projects from the API
-    console.log('Getting projects...');
-    fetchProjects();
-    let projects = JSON.parse(localStorage.getItem("cached_projects"));
 
-    // Get users from the API
-    console.log('Getting users...');
-    let users = await fetchUsers();
-    console.log(users);
+    try {
+        let projects = await fetchProjects();
+        let users = await fetchUsers();
 
+        if (!Array.isArray(projects)) {
+            throw new Error('Projects data is not an array');
+        }
 
-    projects = formatProjects(projects, users);
-    localStorage.setItem("formatted_projects",JSON.stringify(projects));
+        if (!Array.isArray(users)) {
+            throw new Error('Users data is not an array');
+        }
 
-
-    
+        projects = formatProjects(projects, users);
+        console.log(projects);
+        renderProjects(projects);
+    } catch (error) {
+        console.error('Error during initialization:', error);
+    }
 
     function createProjectCard(project) {
         const card = document.createElement('div');
@@ -132,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 projects = projects.filter(p => p.id !== project.id);
                 fetchProjects();
                 saveProjects();
-                renderProjects();
+
             }
         });
 
@@ -146,7 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         return card;
     }
-
 
     function populateFormForEdit(project) {
         document.getElementById('project-name').value = project.project_name;
@@ -200,7 +147,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    function renderProjects() {
+    function renderProjects(projects) {
+        console.log("Rendering projects", projects);
         projectsList.innerHTML = '';
         projects.forEach(project => {
             projectsList.appendChild(createProjectCard(project));
@@ -238,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         saveProjects();
-        renderProjects();
+        renderProjects(projects);
         resetForm();
     });
 
@@ -251,5 +199,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('.submit-button').insertAdjacentElement('beforebegin', cancelButton);
 
     // Initial render
-    renderProjects();
-}); 
+
+});
