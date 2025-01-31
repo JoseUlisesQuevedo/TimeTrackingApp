@@ -17,29 +17,44 @@ function formatProjects(projects, users) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+
+    //Identifies Form and List
     const projectForm = document.getElementById('project-form');
     const projectsList = document.getElementById('projects-list');
+    const techLeadSelect = document.getElementById('tech-lead');
+    const businessLeadSelect = document.getElementById('business-lead');
+    //Flag for project edition
     let editingProjectId = null;
 
+    //Tries initial fetches and renderings
     try {
+
+        //API Calls
         let projects = await fetchProjects();
         let users = await fetchUsers();
 
-        if (!Array.isArray(projects)) {
-            throw new Error('Projects data is not an array');
-        }
+        // Populate Tech Lead and Business Lead options
+        populateUserOptions(users, techLeadSelect);
+        populateUserOptions(users, businessLeadSelect);
 
-        if (!Array.isArray(users)) {
-            throw new Error('Users data is not an array');
-        }
-
+        //Formats projects to card format
         projects = formatProjects(projects, users);
-        console.log(projects);
+        //initial render
         renderProjects(projects);
     } catch (error) {
         console.error('Error during initialization:', error);
     }
 
+    function populateUserOptions(users, selectElement) {
+        users.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = user.username;
+            selectElement.appendChild(option);
+        });
+    }
+
+    //Receives a project and renders the card
     function createProjectCard(project) {
         const card = document.createElement('div');
         card.className = 'project-card';
