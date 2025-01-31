@@ -20,7 +20,7 @@ async function refreshTokenCall() {
     }
 
     try {
-        const response = await api.post("/api/token/refresh/", { refresh: refreshToken });
+        const response = await api.post("token/refresh/", { refresh: refreshToken });
 
         if (response.ok) {
             const data = await response.json();
