@@ -1,20 +1,7 @@
 import { fetchProjects, fetchUsers } from './api.js';
 import { AREA_MAPPING, STATUS_MAPPING } from './constants.js';
+import  {formatProjects, createProjectCard} from './projectCards.js';
 
-//TODO: Change username to name when model is updated
-function formatProjects(projects, users) {
-    return projects.map(project => {
-        const techLead = users.find(user => user.id === project.tech_lead);
-        const businessLead = users.find(user => user.id === project.business_lead);
-        return {
-            ...project,
-            techLead: techLead ? techLead.username : 'None',
-            businessLead: businessLead ? businessLead.username : 'None',
-            area: AREA_MAPPING[project.area] || 'Unknown',
-            status: STATUS_MAPPING[project.status] || 'Unknown'
-        };
-    });
-}
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -54,61 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    //Receives a project and renders the card
-    function createProjectCard(project) {
-        const card = document.createElement('div');
-        card.className = 'project-card';
-        
-        const statusClass = `status-${project.status.toLowerCase().replace(" ","-")}`;
-        const dates = formatProjectDates(project.start_date, project.end_date);
-
-        card.innerHTML = `
-            <div class="project-card-header">
-                <h3 class="project-card-title">${project.project_name}</h3>
-                <span class="project-status ${statusClass}">${capitalizeFirstLetter(project.status)}</span>
-            </div>
-            <div class="project-card-body">
-                ${project.description || 'No description provided'}
-                <div class="project-details">
-                    <div class="detail-item">
-                        <strong>Area:</strong> ${capitalizeFirstLetter(project.area)}
-                    </div>
-                    <div class="detail-item">
-                        <strong>Tech Lead:</strong> ${project.techLead}
-                    </div>
-                    <div class="detail-item">
-                        <strong>Business Lead:</strong> ${project.businessLead}
-                    </div>
-                </div>
-            </div>
-            <div class="project-card-footer">
-                <span>${dates}</span>
-                <div class="project-actions">
-                    <button class="edit-project" data-id="${project.id}">Edit</button>
-                    <button class="delete-project" data-id="${project.id}">Delete</button>
-                </div>
-            </div>
-        `;
-
-        card.querySelector('.delete-project').addEventListener('click', () => {
-            if (confirm(`Are you sure you want to delete this project?`)) {
-                projects = projects.filter(p => p.id !== project.id);
-                fetchProjects();
-                saveProjects();
-
-            }
-        });
-
-        card.querySelector('.edit-project').addEventListener('click', () => {
-            editingProjectId = project.id;
-            populateFormForEdit(project);
-            document.querySelector('.submit-button').textContent = 'Update Project';
-            document.querySelector('.project-form-container h2').textContent = 'Edit Project';
-            projectForm.scrollIntoView({ behavior: 'smooth' });
-        });
-
-        return card;
-    }
 
     function populateFormForEdit(project) {
         document.getElementById('project-name').value = project.project_name;
@@ -141,27 +73,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.project-form-container h2').textContent = 'Add New Project';
     }
 
-    function formatProjectDates(start, end) {
-        if (!start && !end) return 'No dates set';
-        if (!start) return `Due by ${formatDate(end)}`;
-        if (!end) return `Started ${formatDate(start)}`;
-        return `${formatDate(start)} - ${formatDate(end)}`;
-    }
+   
 
-    function formatDate(dateString) {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric', 
-            year: 'numeric' 
-        });
-    }
 
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
+  
     function renderProjects(projects) {
         console.log("Rendering projects", projects);
         projectsList.innerHTML = '';
