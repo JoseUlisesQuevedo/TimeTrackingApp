@@ -7,9 +7,4 @@ export const AREA_MAPPING = {
     'II': 'Internal Initiative',
     'OTH': 'Other'
 };
-export const STATUS_MAPPING = { 
-    'A': 'Active',
-    'OH': 'On hold',
-    'C': 'Completed'
-};
 export const CACHE_EXPIRY = 60 * 60 * 1000; // 1 hour in milliseconds

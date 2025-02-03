@@ -1,5 +1,4 @@
 import { fetchProjects, fetchUsers } from './api.js';
-import { AREA_MAPPING, STATUS_MAPPING } from './constants.js';
 import  {formatProjects, createProjectCard, renderProjects} from './projectCards.js';
 import { addFormListeners,populateUserOptions } from './projectForm.js';
 

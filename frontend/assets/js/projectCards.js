@@ -6,7 +6,7 @@
  */
 
 
-import { AREA_MAPPING, STATUS_MAPPING } from './constants.js';
+import { AREA_MAPPING } from './constants.js';
 import api from './api.js';
 import { fetchProjects,fetchUsers} from './api.js';
 import { populateFormForEdit } from './projectForm.js';
@@ -28,8 +28,7 @@ export function formatProjects(projects, users) {
             ...project,
             techLead: techLead ? techLead.username : 'None',
             businessLead: businessLead ? businessLead.username : 'None',
-            area: AREA_MAPPING[project.area] || 'Unknown',
-            status: STATUS_MAPPING[project.status] || 'Unknown'
+            cleanArea: AREA_MAPPING[project.area] || 'Unknown',
         };
     });
 }
@@ -56,7 +55,8 @@ export function createProjectCard(project) {
     const card = document.createElement('div');
     card.className = 'project-card';
     
-    const statusClass = `status-${project.status.toLowerCase().replace(" ","-")}`;
+    const statusClass = `status-${project.status}`;
+    console.log(project.area);
     const dates = formatProjectDates(project.start_date, project.end_date);
 
     card.innerHTML = `
@@ -68,7 +68,7 @@ export function createProjectCard(project) {
             ${project.description || 'No description provided'}
             <div class="project-details">
                 <div class="detail-item">
-                    <strong>Area:</strong> ${capitalizeFirstLetter(project.area)}
+                    <strong>Area:</strong> ${capitalizeFirstLetter(project.cleanArea)}
                 </div>
                 <div class="detail-item">
                     <strong>Tech Lead:</strong> ${project.techLead}
@@ -109,7 +109,6 @@ export function createProjectCard(project) {
         populateFormForEdit(project);
         document.querySelector('.submit-button').textContent = 'Update Project';
         document.querySelector('.project-form-container h2').textContent = 'Edit Project';
-        projectForm.scrollIntoView({ behavior: 'smooth' });
     });
 
     return card;
@@ -135,7 +134,8 @@ function capitalizeFirstLetter(string) {
  */
 function formatDate(dateString) {
     if (!dateString) return '';
-    const date = new Date(dateString);
+    //Adds 6 hours to the date to avoid timezone issues
+    const date = new Date(dateString+ 'T07:00:00');
     return date.toLocaleDateString('en-US', { 
         month: 'short', 
         day: 'numeric', 
