@@ -21,14 +21,31 @@ import { formatProjects, renderProjects } from './projectCards.js';
                 area: document.getElementById('project-area').value
             };
 
-            let editingProjectId = false;
+            let editingProjectId = localStorage.getItem('editingProjectId');
 
-            if (editingProjectId) {
+            if (editingProjectId !== "null") {
                 // Update existing project
-                const index = projects.findIndex(p => p.id === editingProjectId);
-                if (index !== -1) {
-                    projects[index] = { ...projects[index], ...projectData };
-                }
+                // Remove any null or empty values from projectData
+                Object.keys(projectData).forEach(key => {
+                    if (projectData[key] === null || projectData[key] === '') {
+                        delete projectData[key];
+                    }
+                });
+                // Use api.put to update the project
+                api.patch(`projects/update/${editingProjectId}/`, projectData)
+                    .then(async response => {
+                        if (response.status === 200) {
+                            console.log('Project updated successfully');
+                            let projects = await fetchProjects();
+                            let users = await fetchUsers();
+                            projects = formatProjects(projects, users);
+                            renderProjects(projects);
+                            resetForm();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating project:', error);
+            });
             } else {
                 // Create new project
                 // Remove any null or empty values from projectData
@@ -54,9 +71,6 @@ import { formatProjects, renderProjects } from './projectCards.js';
                         console.error('Error creating project:', error);
                     });
             }
-
-            renderProjects(projects);
-            resetForm();
         });
 
         // Add cancel button to form
@@ -81,6 +95,7 @@ export function populateUserOptions(users, selectElement) {
 
 function resetForm() {
     const projectForm = document.getElementById('project-form');
+    localStorage.setItem('editingProjectId', null);
     projectForm.reset();
     document.querySelector('.submit-button').textContent = 'Create Project';
     document.querySelector('.project-form-container h2').textContent = 'Add New Project';

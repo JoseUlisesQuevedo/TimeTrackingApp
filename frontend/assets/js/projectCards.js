@@ -105,7 +105,7 @@ export function createProjectCard(project) {
     });
 
     card.querySelector('.edit-project').addEventListener('click', () => {
-        let editingProjectId = project.id;
+        localStorage.setItem('editingProjectId', project.id);
         populateFormForEdit(project);
         document.querySelector('.submit-button').textContent = 'Update Project';
         document.querySelector('.project-form-container h2').textContent = 'Edit Project';
