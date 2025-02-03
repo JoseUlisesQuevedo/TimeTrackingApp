@@ -4,7 +4,7 @@ import { updateTotalHours } from './timeEntries.js';
 import { saveTimeEntries } from './timeEntries.js';
 import { ProjectRow } from './projectRow.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     
 
     const projectRowManager = new ProjectRow();
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initial empty row
-    document.getElementById('project-rows').appendChild(projectRowManager.createEmptyRow());
+    document.getElementById('project-rows').appendChild(await projectRowManager.createEmptyRow());
 
     // Refresh project list when the page becomes visible
     document.addEventListener('visibilitychange', () => {

@@ -1,12 +1,13 @@
 import { getTimeInHours } from './timeUtils.js';
 import { updateTotalHours } from './timeEntries.js';
+import api, { fetchProjects } from './api.js';
 
 export class ProjectRow {
     constructor() {
         this.projectRows = new Map();
     }
 
-    createEmptyRow() {
+    async createEmptyRow() {
         const row = document.createElement('div');
         row.className = 'project-row empty-row';
         
@@ -17,24 +18,24 @@ export class ProjectRow {
         select.className = 'project-select';
         
         // Get projects from localStorage
-        const projects = JSON.parse(localStorage.getItem('projects')) || [];
-        
+        let projects = await fetchProjects();
+        projects = projects.filter(project => project.status !== 'completed');
+        console.log(projects);
+
         // Create default option
         const defaultOption = document.createElement('option');
         defaultOption.value = '';
         defaultOption.textContent = 'Select Project';
         select.appendChild(defaultOption);
-        
+
         // Add stored projects to select
-        projects
-            .filter(project => project.status !== 'completed') // Only show active and on-hold projects
-            .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically
-            .forEach(project => {
-                const option = document.createElement('option');
-                option.value = project.id;
-                option.textContent = project.name;
-                select.appendChild(option);
-            });
+        projects.forEach(project => {
+            const option = document.createElement('option');
+            option.value = project.id;
+            option.textContent = project.project_name;
+            select.appendChild(option);
+        });
+        
 
         projectSelector.appendChild(select);
         row.appendChild(projectSelector);
