@@ -3,11 +3,14 @@ import { formatTimeDisplay, getTimeInHours } from './timeUtils.js';
 import { updateTotalHours } from './timeEntries.js';
 import { saveTimeEntries } from './timeEntries.js';
 import { ProjectRow } from './projectRow.js';
+import { fetchTimeEntries } from './api.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     
 
     const projectRowManager = new ProjectRow();
+    let timeEntries = await fetchTimeEntries();
+    console.log(JSON.stringify(timeEntries));
 
     // Function to refresh empty row when returning to the page
     async function refreshEmptyRow() {
