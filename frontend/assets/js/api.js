@@ -66,7 +66,7 @@ export async function fetchProjects() {
 
 export async function fetchTimeEntries() {
     try {
-        const response = await api.get('time_entries/');
+        const response = await api.get('timeEntries/');
         if (response.status===200) {
             return await response.data;
         }
