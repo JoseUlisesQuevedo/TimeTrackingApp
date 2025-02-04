@@ -3,11 +3,12 @@ import { formatTimeDisplay, getTimeInHours } from './timeUtils.js';
 import { updateTotalHours } from './timeEntries.js';
 import { saveTimeEntries } from './timeEntries.js';
 import { ProjectRow } from './projectRow.js';
-import { fetchTimeEntries } from './api.js';
+import { fetchTimeEntries, fetchProjects } from './api.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     
 
+    //Creates the project row manager
     const projectRowManager = new ProjectRow();
     let timeEntries = await fetchTimeEntries();
     console.log(JSON.stringify(timeEntries));
@@ -35,6 +36,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let currentDate = new Date();
     let currentWeekDates = getWeekDates(currentDate);
+
+    const weekStart = currentWeekDates[0];
+    const weekEnd = currentWeekDates[currentWeekDates.length - 1];
+
+    console.log(`Week starts on: ${formatDate(weekStart)}`);
+    console.log(`Week ends on: ${formatDate(weekEnd)}`);
+
+    // const filteredTimeEntries = timeEntries.filter(entry => {
+    //     const entryDate = new Date(entry.date);
+    //     return entryDate >= weekStart && entryDate <= weekEnd;
+    // });
+
+
 
     function updateWeekDisplay(dates) {
         document.getElementById('week-display').textContent = formatWeekDisplay(dates);
@@ -79,6 +93,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    const projects = await fetchProjects(); // Assuming fetchProjects is a function that fetches the list of projects
+
+    timeEntries.forEach(async entry => {
+        console.log(entry);
+        const project = projects.find(project => project.id === entry.project);
+        console.log("Project found");
+        console.log(project);
+        if (project) {
+            const newRow = document.querySelector('.empty-row');
+
+            projectRowManager.convertToProjectRow(newRow, project.project_name, project.id);
+            //document.getElementById('project-rows').appendChild(newRow);
+        }
+    });
     // Add project selection handler
     document.addEventListener('change', (e) => {
         if (e.target.matches('.project-select')) {
