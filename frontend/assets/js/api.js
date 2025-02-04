@@ -64,3 +64,15 @@ export async function fetchProjects() {
     }
 }
 
+export async function fetchTimeEntries() {
+    try {
+        const response = await api.get('time_entries/');
+        if (response.status===200) {
+            return await response.data;
+        }
+        throw new Error('Failed to get time entries');
+    } catch (error) {
+        console.error('Error getting time entries:', error);
+        return [];
+    }
+}
