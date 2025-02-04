@@ -84,14 +84,14 @@ export class ProjectRow {
         row.appendChild(projectNameDiv);
         row.appendChild(timeInputs);
 
-        row.querySelector('.remove-project').addEventListener('click', () => {
+        row.querySelector('.remove-project').addEventListener('click',async () => {
             row.remove();
             this.projectRows.delete(projectId);
             updateTotalHours();
             
             // Check if we need to add a new empty row
             if (!document.querySelector('.empty-row')) {
-                document.getElementById('project-rows').appendChild(this.createEmptyRow());
+                document.getElementById('project-rows').appendChild(await this.createEmptyRow());
             }
         });
 
@@ -118,7 +118,7 @@ export class ProjectRow {
         });
     }
 
-    convertToProjectRow(emptyRow, projectName, projectId) {
+    async convertToProjectRow(emptyRow, projectName, projectId) {
         if (this.projectRows.has(projectId)) {
             alert('This project is already added');
             emptyRow.querySelector('select').value = '';
@@ -131,7 +131,7 @@ export class ProjectRow {
         
         // Add new empty row if needed
         if (!emptyRow.nextSibling || !emptyRow.nextSibling.classList.contains('empty-row')) {
-            const newEmptyRow = this.createEmptyRow();
+            const newEmptyRow = await this.createEmptyRow();
             emptyRow.parentNode.insertBefore(newEmptyRow, emptyRow);
         }
         

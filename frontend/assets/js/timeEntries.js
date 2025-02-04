@@ -1,4 +1,4 @@
-import { getTimeInHours } from './timeUtils.js';
+import { getTimeInHours, formatTimeDisplay } from './timeUtils.js';
 
 
 export function updateTotalHours() {
@@ -14,6 +14,8 @@ export function updateTotalHours() {
 export function saveTimeEntries(projectRows) {
     const entries = [];
     projectRows.forEach((row, projectId) => {
+        console.log('Row:', row);
+        console.log('Project ID:', projectId);
         const timeInputs = row.querySelectorAll('.time-input');
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
         

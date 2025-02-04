@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     console.log("projectRowManager created");
     // Function to refresh empty row when returning to the page
-    function refreshEmptyRow() {
+    async function refreshEmptyRow() {
         const existingEmptyRow = document.querySelector('.empty-row');
         if (existingEmptyRow) {
-            const newEmptyRow = projectRowManager.createEmptyRow();
+            const newEmptyRow = await projectRowManager.createEmptyRow();
             existingEmptyRow.replaceWith(newEmptyRow);
         } else {
-            document.getElementById('project-rows').appendChild(projectRowManager.createEmptyRow());
+            document.getElementById('project-rows').appendChild(await projectRowManager.createEmptyRow());
         }
     }
 
@@ -74,10 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('save-time').addEventListener('click', () => {
         if (saveTimeEntries(projectRowManager.getProjectRows())) {
-            document.querySelectorAll('.time-input input').forEach(input => {
-                input.value = '';
-            });
-            updateTotalHours();
+            console.log("Time entries saved");
         }
     });
 
