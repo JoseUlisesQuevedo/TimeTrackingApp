@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const projectRowManager = new ProjectRow();
 
-    console.log("projectRowManager created");
     // Function to refresh empty row when returning to the page
     async function refreshEmptyRow() {
         const existingEmptyRow = document.querySelector('.empty-row');
@@ -74,7 +73,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('save-time').addEventListener('click', () => {
         if (saveTimeEntries(projectRowManager.getProjectRows())) {
-            console.log("Time entries saved");
         }
     });
 

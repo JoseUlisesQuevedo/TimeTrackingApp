@@ -35,7 +35,6 @@ import { formatProjects, renderProjects } from './projectCards.js';
                 api.patch(`projects/update/${editingProjectId}/`, projectData)
                     .then(async response => {
                         if (response.status === 200) {
-                            console.log('Project updated successfully');
                             let projects = await fetchProjects();
                             let users = await fetchUsers();
                             projects = formatProjects(projects, users);
@@ -58,7 +57,6 @@ import { formatProjects, renderProjects } from './projectCards.js';
                 api.post("projects/", projectData)
                     .then(async response => {
                         if (response.status === 201) {
-                            console.log('Project created successfully');
                             let projects = await fetchProjects();
                             let users = await fetchUsers();
                             projects = formatProjects(projects, users);

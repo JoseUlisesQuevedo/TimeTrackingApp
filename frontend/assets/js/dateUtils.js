@@ -11,7 +11,6 @@ export function updateWeekDisplay(dates) {
     const dayLabels = document.querySelectorAll('.day-label');
     dates.forEach((date, index) => {
         const dayLabel = dayLabels[index];
-        console.log(date.toLocaleDateString('en-US', { weekday: 'long' }));
         dayLabel.innerHTML = `
             ${date.toLocaleDateString('en-US', { weekday: 'long' })}
             <span class="day-date">${formatDate(date)}</span>
@@ -57,6 +56,5 @@ export function getWeekDates(date) {
         day.setDate(monday.getDate() + i);
         dates.push(day);
     }
-    console.log(dates);
     return dates;
 } 

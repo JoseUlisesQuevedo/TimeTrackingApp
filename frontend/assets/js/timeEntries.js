@@ -14,8 +14,6 @@ export function updateTotalHours() {
 export function saveTimeEntries(projectRows) {
     const entries = [];
     projectRows.forEach((row, projectId) => {
-        console.log('Row:', row);
-        console.log('Project ID:', projectId);
         const timeInputs = row.querySelectorAll('.time-input');
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
         
@@ -39,6 +37,5 @@ export function saveTimeEntries(projectRows) {
         return false;
     }
 
-    console.log('Saving entries:', entries);
     return true;
 }

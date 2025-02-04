@@ -36,7 +36,6 @@ export function formatProjects(projects, users) {
 
 
 export function renderProjects(projects) {
-    console.log("Rendering projects", projects);
     const projectsList = document.getElementById('projects-list');
     projectsList.innerHTML = '';
     projects.forEach(project => {
@@ -56,7 +55,6 @@ export function createProjectCard(project) {
     card.className = 'project-card';
     
     const statusClass = `status-${project.status}`;
-    console.log(project.area);
     const dates = formatProjectDates(project.start_date, project.end_date);
 
     card.innerHTML = `
@@ -93,7 +91,6 @@ export function createProjectCard(project) {
             //Remove the project from the DB and refresh the page/projects
             const response = await api.delete(`projects/delete/${project.id}/`);
             if (response.status === 204) {
-                console.log('Project deleted successfully');
                let projects = await fetchProjects();
                let users = await fetchUsers();
                projects = formatProjects(projects, users);

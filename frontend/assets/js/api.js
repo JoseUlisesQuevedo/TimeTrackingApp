@@ -33,7 +33,6 @@ export async function fetchUsers() {
     const cacheTime = localStorage.getItem("user_cache_timestamp");
 
     if (cachedUsers && cacheTime && Date.now() - cacheTime < CACHE_EXPIRY) {
-        console.log("Using cached users");
         return cachedUsers;
     }
 

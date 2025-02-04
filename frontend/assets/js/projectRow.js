@@ -20,7 +20,6 @@ export class ProjectRow {
         // Get projects from localStorage
         let projects = await fetchProjects();
         projects = projects.filter(project => project.status !== 'completed');
-        console.log(projects);
 
         // Create default option
         const defaultOption = document.createElement('option');

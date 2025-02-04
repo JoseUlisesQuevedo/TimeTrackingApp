@@ -38,10 +38,8 @@ async function refreshTokenCall() {
 
 function checkAuth() {
 
-    console.log("Checking authentication...");
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (!token) {
-        console.log("Redirecting due to missing token");
 
         redirectToLogin();
         return;
@@ -49,7 +47,6 @@ function checkAuth() {
 
     const decoded = parseJwt(token);
     if (!decoded || !decoded.exp) {
-        console.log("Redirecting due to invalid token");
         redirectToLogin();
         return;
     }
@@ -68,7 +65,6 @@ function redirectToLogin() {
 // Run authentication check when the page loads
 document.addEventListener("DOMContentLoaded", () => {
     if (window.location.pathname !== "/index.html" && window.location.pathname !== "/") {
-        console.log("About to check auth!");
         checkAuth();
     }
     else{
@@ -99,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
 
         } catch (error) {
-            console.log("Your error is: ", error);
             errorMessage.textContent = error.response?.data?.message || "Login failed.";
             errorMessage.style.display = "block";
         }
