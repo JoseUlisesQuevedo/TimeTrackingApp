@@ -35,7 +35,6 @@ export function formatMonthYear(date) {
 
 export function getWeekRange(date) {
     const monday = new Date(date);
-    console.log(monday);
     const day = monday.getDay();
     monday.setDate(monday.getDate() - (day === 0 ? 6 : day - 1));
     
