@@ -11,6 +11,11 @@ export function updateTotalHours() {
     document.getElementById('total-hours').textContent = formatTimeDisplay(total);
 }
 
+export function populateTimeEntries(entries) { 
+    pass;
+}
+
+
 export function saveTimeEntries(projectRows) {
     const entries = [];
     projectRows.forEach((row, projectId) => {
