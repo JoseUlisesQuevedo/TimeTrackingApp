@@ -60,6 +60,7 @@ export function createProjectCard(project) {
     card.innerHTML = `
         <div class="project-card-header">
             <h3 class="project-card-title">${project.project_name}</h3>
+            <small>(ID: ${project.id})</small>
             <span class="project-status ${statusClass}">${capitalizeFirstLetter(project.status)}</span>
         </div>
         <div class="project-card-body">
