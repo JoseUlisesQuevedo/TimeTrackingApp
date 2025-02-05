@@ -119,7 +119,7 @@ button:hover {
     flex-shrink: 0;
     padding: 0.5rem;
     background-color: #B3D5E8;
-    border-radius: 5px;
+    border-radius: 2px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -150,26 +150,31 @@ button:hover {
     align-items: center;
 }
 
+/* Increase the size and make the time input boxes more square */
 .time-input input {
-    padding: 0.5rem;
+    padding: 0.75rem; /* Increase padding for better usability */
     border: 1px solid #669BC4;
-    border-radius: 5px;
-    width: 4rem;
+    border-radius: 5px; /* Adjust border radius to make them more square */
+    width: 5rem; /* Increase width */
+    height: 3rem; /* Increase height */
+    font-size: 1rem; /* Increase font size for better readability */
 }
 
-.time-input input::-webkit-inner-spin-button,
-.time-input input::-webkit-outer-spin-button {
-    opacity: 1;
+.time-input .minutes-input {
+    width: 5rem; /* Match the width of the hours input */
+    height: 3rem; /* Match the height of the hours input */
 }
 
+/* Adjust focus styles for better visibility */
 .time-input input:focus {
     outline: none;
     border-color: #4885CE;
     box-shadow: 0 0 0 2px rgba(72, 133, 206, 0.2);
 }
 
-.time-input .minutes-input {
-    width: 3.5rem;
+.time-input input::-webkit-inner-spin-button,
+.time-input input::-webkit-outer-spin-button {
+    opacity: 1;
 }
 
 .time-input span {
@@ -638,4 +643,3 @@ footer {
     margin-bottom: 1.5rem;
     color: #3A5781;
 }
-  

@@ -45,16 +45,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             projectRowsContainer.innerHTML = '';
             projectRowsContainer.appendChild(await projectRowManager.createEmptyRow());
 
-            projects.forEach(async project => {
-                
-                
+            for (const project of projects) {
                 const entries = timeEntries.filter(entry => entry.project === project.id);
                 if (entries.length > 0) {
                     const newRow = document.querySelector('.empty-row');
-                    const newProjectRow = await projectRowManager.convertToProjectRow(newRow, project.project_name, project.id);
-                    populateProjectRowWithHours(newProjectRow, entries);
+                    if (newRow) {
+                        const newProjectRow = await projectRowManager.convertToProjectRow(newRow, project.project_name, project.id);
+                        populateProjectRowWithHours(newProjectRow, entries);
+                    }
                 }
-            });
+            }
 
             setTimeout(() => {
                 updateTotalHours();
