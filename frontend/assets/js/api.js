@@ -27,6 +27,15 @@ api.interceptors.request.use(
 export default api;
 
 
+export async function deleteMultipleEntries(entryIDs) {
+    const promises = entryIDs.map(id => api.delete(`timeEntries/delete/${id}/`));
+    try {
+        await Promise.all(promises);
+    } catch (error) {
+        console.error('Error deleting time entries:', error);
+    }
+}
+
 export async function fetchUsers() {
     
     const cachedUsers = JSON.parse(localStorage.getItem("cached_users"));
