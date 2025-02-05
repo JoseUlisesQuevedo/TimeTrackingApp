@@ -78,6 +78,15 @@ export function saveTimeEntries(projectRows,dateRange) {
 
                 entries.push(entry);
             }
+            else {
+                if (entryId) {
+                    api.delete(`timeEntries/delete/${entryId}/`).then(response => {
+                        if (response.status !== 204) {
+                            console.error('Failed to delete time entry', entryId);
+                        }
+                    });
+                }
+            }
         });
     });
 
