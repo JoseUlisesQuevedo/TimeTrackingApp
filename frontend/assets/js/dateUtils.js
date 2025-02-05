@@ -46,15 +46,18 @@ export function getWeekDates(date) {
     const monday = new Date(date);
     const dayOfWeek = monday.getDay();
     
-  
     const daysToSubtract = dayOfWeek === 0 ? -1 : dayOfWeek === 6 ? 5 : dayOfWeek - 1;
     monday.setDate(monday.getDate() - daysToSubtract);
-    
+    monday.setHours(0, 0, 0, 0); // Set to 00:00:00
+
     const dates = [];
     for (let i = 0; i < 5; i++) {
         const day = new Date(monday);
         day.setDate(monday.getDate() + i);
+        if (i === 4) {
+            day.setHours(23, 59, 59, 999); // Set last day to 23:59:59
+        }
         dates.push(day);
     }
     return dates;
-} 
+}

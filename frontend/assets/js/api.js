@@ -63,11 +63,14 @@ export async function fetchProjects() {
         return [];
     }
 }
-
-export async function fetchTimeEntries() {
+export async function fetchTimeEntries(start_date = null, end_date = null) {
     try {
-        const response = await api.get('timeEntries/');
-        if (response.status===200) {
+        const params = {};
+        if (start_date) params.start_date = start_date;
+        if (end_date) params.end_date = end_date;
+
+        const response = await api.get('timeEntries/', { params });
+        if (response.status === 200) {
             return await response.data;
         }
         throw new Error('Failed to get time entries');

@@ -70,10 +70,10 @@ export class ProjectRow {
             const inputDiv = document.createElement('div');
             inputDiv.className = 'time-input';
             inputDiv.innerHTML = `
-                <input type="number" class="hours-input" min="0" placeholder="0" title="Hours">
-                <span>h</span>
-                <input type="number" class="minutes-input" min="0" max="59" placeholder="00" title="Minutes">
-                <span>m</span>
+            <input type="number" class="hours-input" id="hours-input-${projectId}-${i}" min="0" placeholder="0" title="Hours">
+            <span>h</span>
+            <input type="number" class="minutes-input" id="minutes-input-${projectId}-${i}" min="0" max="59" placeholder="00" title="Minutes">
+            <span>m</span>
             `;
 
             this.setupTimeInputs(inputDiv);
@@ -118,14 +118,23 @@ export class ProjectRow {
     }
 
     async convertToProjectRow(emptyRow, projectName, projectId) {
+
+        console.log("These are the projects in projectRows: ",this.projectRows);
+        projectId = parseInt(projectId, 10);
         if (this.projectRows.has(projectId)) {
-            alert('This project is already added');
+            alert('This project is already added' + "id:" + projectId);
             emptyRow.querySelector('select').value = '';
             return;
         }
 
         const newRow = this.createProjectRow(projectName, projectId);
-        emptyRow.parentNode.insertBefore(newRow, emptyRow);
+
+        if (emptyRow.parentNode) {
+            emptyRow.parentNode.insertBefore(newRow, emptyRow);
+        } else {
+            console.error('emptyRow is not attached to the DOM');
+        }
+
         this.projectRows.set(projectId, newRow);
         
         // Add new empty row if needed
@@ -135,6 +144,11 @@ export class ProjectRow {
         }
         
         emptyRow.remove();
+        return newRow;
+    }
+
+    clearProjectRows(){
+        this.projectRows.clear();
     }
 
     getProjectRows() {

@@ -1,58 +1,76 @@
+import { fetchProjects, fetchTimeEntries } from './api.js';
 import { getWeekDates, formatDate, formatWeekDisplay, formatDateForInput } from './dateUtils.js';
-import { formatTimeDisplay, getTimeInHours } from './timeUtils.js';
-import { updateTotalHours } from './timeEntries.js';
-import { saveTimeEntries } from './timeEntries.js';
+import { updateTotalHours,saveTimeEntries } from './timeEntries.js';
 import { ProjectRow } from './projectRow.js';
-import { fetchTimeEntries, fetchProjects } from './api.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    
-
-    //Creates the project row manager
-    const projectRowManager = new ProjectRow();
-    let timeEntries = await fetchTimeEntries();
-    console.log(JSON.stringify(timeEntries));
-
-    // Function to refresh empty row when returning to the page
-    async function refreshEmptyRow() {
-        const existingEmptyRow = document.querySelector('.empty-row');
-        if (existingEmptyRow) {
-            const newEmptyRow = await projectRowManager.createEmptyRow();
-            existingEmptyRow.replaceWith(newEmptyRow);
-        } else {
-            document.getElementById('project-rows').appendChild(await projectRowManager.createEmptyRow());
-        }
-    }
-
-    // Initial empty row
-    document.getElementById('project-rows').appendChild(await projectRowManager.createEmptyRow());
-
-    // Refresh project list when the page becomes visible
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            refreshEmptyRow();
-        }
-    });
-
+    let projectRowManager = new ProjectRow();
+    const projectRowsContainer = document.getElementById('project-rows');
     let currentDate = new Date();
     let currentWeekDates = getWeekDates(currentDate);
 
-    const weekStart = currentWeekDates[0];
-    const weekEnd = currentWeekDates[currentWeekDates.length - 1];
+    // Initial empty row
+    projectRowsContainer.appendChild(await projectRowManager.createEmptyRow());
 
-    console.log(`Week starts on: ${formatDate(weekStart)}`);
-    console.log(`Week ends on: ${formatDate(weekEnd)}`);
+    //Gets the current week's projects and entries
+    async function loadProjectsAndEntries(projectRowManager,start_date = null, end_date = null) {
+        try {
+            // Create a new instance of ProjectRowManager
+            
+            
+            //Gets project and relevant time Entries (based on the current week)
+            const projects = await fetchProjects();
+            const timeEntries = await fetchTimeEntries(start_date, end_date);
 
-    // const filteredTimeEntries = timeEntries.filter(entry => {
-    //     const entryDate = new Date(entry.date);
-    //     return entryDate >= weekStart && entryDate <= weekEnd;
-    // });
+            // Clear existing project rows
+            projectRowsContainer.innerHTML = '';
+            projectRowsContainer.appendChild(await projectRowManager.createEmptyRow());
+
+            projects.forEach(async project => {
+                
+                
+                const entries = timeEntries.filter(entry => entry.project === project.id);
+                if (entries.length > 0) {
+                    const newRow = document.querySelector('.empty-row');
+                    const newProjectRow = await projectRowManager.convertToProjectRow(newRow, project.project_name, project.id);
+                    populateProjectRowWithHours(newProjectRow, entries);
+                }
+            });
+
+            setTimeout(() => {
+                updateTotalHours();
+            }, 1000);
+
+        } catch (error) {
+            console.error('Error loading projects and entries:', error);
+        }
+    }
+
+    function populateProjectRowWithHours(row, entries) {
+
+        const timeInputs = row.querySelectorAll('.time-input');
 
 
+        entries.forEach(entry => {
+
+            const entryDate = new Date(entry.entry_date + 'T06:00:00');
+            const inputIndex = currentWeekDates.findIndex(date => date.toDateString() === entryDate.toDateString());
+            if (inputIndex !== -1) {
+            const totalMinutes = entry.duration;
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            const timeInput = timeInputs[inputIndex];
+            
+            timeInput.querySelector('.hours-input').value = hours;
+            timeInput.querySelector('.minutes-input').value = minutes;
+            timeInput.dataset.entryId = entry.id; // Add entry.id to the relevant timeInput
+            }
+        });
+    }
 
     function updateWeekDisplay(dates) {
         document.getElementById('week-display').textContent = formatWeekDisplay(dates);
-        
+
         const dayLabels = document.querySelectorAll('.day-label');
         dates.forEach((date, index) => {
             const dayLabel = dayLabels[index];
@@ -70,13 +88,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('prev-week').addEventListener('click', () => {
         currentDate.setDate(currentDate.getDate() - 7);
         currentWeekDates = getWeekDates(currentDate);
-        updateWeekDisplay(currentWeekDates);
+        updateWeekDisplay(currentWeekDates); 
+        projectRowManager.clearProjectRows();
+        loadProjectsAndEntries(projectRowManager,currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
     });
 
     document.getElementById('next-week').addEventListener('click', () => {
         currentDate.setDate(currentDate.getDate() + 7);
         currentWeekDates = getWeekDates(currentDate);
-        updateWeekDisplay(currentWeekDates);
+        updateWeekDisplay(currentWeekDates); 
+        projectRowManager.clearProjectRows();
+        loadProjectsAndEntries(projectRowManager,currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
     });
 
     const weekPickerInput = document.getElementById('week-picker-input');
@@ -86,28 +108,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentDate = new Date(e.target.value);
         currentWeekDates = getWeekDates(currentDate);
         updateWeekDisplay(currentWeekDates);
+        projectRowManager.clearProjectRows();
+        loadProjectsAndEntries(projectRowManager,currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
+
     });
+
 
     document.getElementById('save-time').addEventListener('click', () => {
-        if (saveTimeEntries(projectRowManager.getProjectRows())) {
+        const projectRows = projectRowManager.getProjectRows();
+        if (projectRows.size !== 0) {
+            saveTimeEntries(projectRows, currentWeekDates);
+            alert('Time entries saved successfully');
+        } else {
+            alert('Failed to save time entries');
         }
     });
 
-    const projects = await fetchProjects(); // Assuming fetchProjects is a function that fetches the list of projects
-
-    timeEntries.forEach(async entry => {
-        console.log(entry);
-        const project = projects.find(project => project.id === entry.project);
-        console.log("Project found");
-        console.log(project);
-        if (project) {
-            const newRow = document.querySelector('.empty-row');
-
-            projectRowManager.convertToProjectRow(newRow, project.project_name, project.id);
-            //document.getElementById('project-rows').appendChild(newRow);
-        }
-    });
-    // Add project selection handler
     document.addEventListener('change', (e) => {
         if (e.target.matches('.project-select')) {
             const emptyRow = e.target.closest('.empty-row');
@@ -119,6 +135,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Initialize the week display
+    // Initial load
     updateWeekDisplay(currentWeekDates);
+    await loadProjectsAndEntries(projectRowManager,currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
+    setTimeout(() => {
+        updateTotalHours();
+    }, 1000);
+
 });
