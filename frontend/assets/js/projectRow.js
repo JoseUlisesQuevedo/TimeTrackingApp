@@ -119,7 +119,6 @@ export class ProjectRow {
 
     async convertToProjectRow(emptyRow, projectName, projectId) {
 
-        console.log("These are the projects in projectRows: ",this.projectRows);
         projectId = parseInt(projectId, 10);
         if (this.projectRows.has(projectId)) {
             alert('This project is already added' + "id:" + projectId);

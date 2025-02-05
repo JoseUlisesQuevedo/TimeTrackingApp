@@ -1,4 +1,5 @@
 import { getTimeInHours, formatTimeDisplay } from './timeUtils.js';
+import api from './api.js';
 
 
 export function updateTotalHours() {
@@ -28,7 +29,6 @@ export function populateTimeEntries(entries,projects) {
 
 export function saveTimeEntries(projectRows,dateRange) {
     const entries = [];
-    console.log(dateRange);
     projectRows.forEach((row, projectId) => {
         const timeInputs = row.querySelectorAll('.time-input');
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
@@ -37,13 +37,46 @@ export function saveTimeEntries(projectRows,dateRange) {
             const hoursInput = input.querySelector('.hours-input');
             const minutesInput = input.querySelector('.minutes-input');
             const totalHours = getTimeInHours(hoursInput, minutesInput);
+            const entryId = input.dataset.entryId;
 
             if (totalHours > 0) {
-                entries.push({
+                const entry = {
                     project: projectId,
                     day: days[index],
                     hours: totalHours
-                });
+                };
+
+                if (entryId) {
+                    entry.id = entryId;
+                    let entry_date = new Date(dateRange[index]).toISOString().split('T')[0];
+                    let payload = {
+                        "id": entryId,
+                        "duration": totalHours * 60,
+                        "project": projectId,
+                        "entry_date": entry_date
+
+                    };
+                    api.patch(`timeEntries/update/${entryId}/`, payload).then(response => {
+                        if (response.status !== 200) {
+                            console.error('Failed to update time entry', entryId);
+                        }
+                    });
+                    
+                } else {
+                    let entry_date = new Date(dateRange[index]).toISOString().split('T')[0];
+                    let payload = {
+                        "duration": totalHours * 60,
+                        "project": projectId,
+                        "entry_date": entry_date
+                    };
+                    api.post('timeEntries/', payload).then(response => {
+                        if (response.status !== 201) {
+                            console.error('Failed to create time entry');
+                        }
+                    });
+                }
+
+                entries.push(entry);
             }
         });
     });
@@ -53,5 +86,5 @@ export function saveTimeEntries(projectRows,dateRange) {
         return false;
     }
 
-    return true;
+    return true;;
 }

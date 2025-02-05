@@ -8,9 +8,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     const projectRowsContainer = document.getElementById('project-rows');
     let currentDate = new Date();
     let currentWeekDates = getWeekDates(currentDate);
+    
+    let hasUnsavedChanges = false;
 
     // Initial empty row
     projectRowsContainer.appendChild(await projectRowManager.createEmptyRow());
+
+    function detectChanges() {
+        document.querySelectorAll('.time-input input').forEach(input => {
+            input.addEventListener('input', () => {
+                hasUnsavedChanges = true;
+            });
+        });
+    }
+
+    // Warn user if there are unsaved changes
+    window.addEventListener('beforeunload', (e) => {
+        if (hasUnsavedChanges) {
+            e.preventDefault();
+        }
+    });
+    
 
     //Gets the current week's projects and entries
     async function loadProjectsAndEntries(projectRowManager,start_date = null, end_date = null) {
@@ -21,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             //Gets project and relevant time Entries (based on the current week)
             const projects = await fetchProjects();
             const timeEntries = await fetchTimeEntries(start_date, end_date);
+            console.log(timeEntries);
 
             // Clear existing project rows
             projectRowsContainer.innerHTML = '';
@@ -40,6 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             setTimeout(() => {
                 updateTotalHours();
             }, 1000);
+
+            detectChanges();
 
         } catch (error) {
             console.error('Error loading projects and entries:', error);
@@ -86,6 +107,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Event Listeners
     document.getElementById('prev-week').addEventListener('click', () => {
+        if (hasUnsavedChanges && !confirm('You have unsaved changes. Are you sure you want to navigate away?')) {
+            return;
+        }
+
+        hasUnsavedChanges = false;
         currentDate.setDate(currentDate.getDate() - 7);
         currentWeekDates = getWeekDates(currentDate);
         updateWeekDisplay(currentWeekDates); 
@@ -94,6 +120,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     document.getElementById('next-week').addEventListener('click', () => {
+        if (hasUnsavedChanges && !confirm('You have unsaved changes. Are you sure you want to navigate away?')) {
+            return;
+        }
+
+        hasUnsavedChanges = false;
         currentDate.setDate(currentDate.getDate() + 7);
         currentWeekDates = getWeekDates(currentDate);
         updateWeekDisplay(currentWeekDates); 
@@ -118,6 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const projectRows = projectRowManager.getProjectRows();
         if (projectRows.size !== 0) {
             saveTimeEntries(projectRows, currentWeekDates);
+            hasUnsavedChanges = false;
             alert('Time entries saved successfully');
         } else {
             alert('Failed to save time entries');
