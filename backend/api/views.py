@@ -53,6 +53,14 @@ class TimeEntryUpdate(generics.RetrieveUpdateAPIView):
     serializer_class = TimeEntrySerializer
     permission_classes = [IsAuthenticated]
 
+class TimeEntryDelete(generics.DestroyAPIView):
+    queryset = TimeEntry.objects.all()
+    serializer_class = TimeEntrySerializer
+    permission_classes = [IsAuthenticated]
+    
+    def perform_destroy(self, instance):
+        instance.delete()
+        
 class ProjectListCreate(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]

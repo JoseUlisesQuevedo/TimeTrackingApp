@@ -1,6 +1,6 @@
 import { getTimeInHours } from './timeUtils.js';
 import { updateTotalHours } from './timeEntries.js';
-import api, { fetchProjects } from './api.js';
+import api, { fetchProjects,deleteMultipleEntries } from './api.js';
 
 export class ProjectRow {
     constructor() {
@@ -84,8 +84,20 @@ export class ProjectRow {
         row.appendChild(timeInputs);
 
         row.querySelector('.remove-project').addEventListener('click',async () => {
+
+            if(!confirm('Are you sure you want to remove this project? This will delete time entries for multiple days. This cannot be undone!')) return;
+
+            const entryIds = [];
+            row.querySelectorAll('.time-input').forEach(inputDiv => {
+                const entryID = inputDiv.dataset.entryId;
+                if (entryID !== undefined) {
+                    entryIds.push(entryID);
+                }
+            });
+
             row.remove();
             this.projectRows.delete(projectId);
+            deleteMultipleEntries(entryIds);
             updateTotalHours();
             
             // Check if we need to add a new empty row
