@@ -26,11 +26,11 @@ class Project(models.Model):
     max_length=3, choices=AREA_CHOICES,null=True,default='OTH')
 
     STATUS_CHOICES = [
-        ('A', 'Active'),
-        ('OH', 'On hold'),
-        ('C', 'Completed')]
+        ('active', 'Active'),
+        ('on-hold', 'On hold'),
+        ('completed', 'Completed')]
     status = models.CharField(
-    max_length=3, choices=STATUS_CHOICES,null=True,default='OH')
+    max_length=10, choices=STATUS_CHOICES,null=True,default='active')
 
     #Metadata    
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_projects')

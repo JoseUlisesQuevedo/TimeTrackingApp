@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="icon" type = "image/png" href="../assets/img/favicon.png">
+    
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Please log in to continue</p>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter your username">
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+
+                <p id="error-message" class="error-message"></p>
+
+                <button type="submit" class="login-btn">Log In</button>
+            </form>
+        </div>
+    </div>
+    <!-- Add this script tag inside your <head> or before the closing </body> tag -->
+    <script type = "module" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type= "module" src="assets/js/auth.js" defer></script>
+</body>
+</html>

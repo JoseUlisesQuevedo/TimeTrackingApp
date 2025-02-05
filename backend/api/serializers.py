@@ -22,6 +22,6 @@ class ProjectSerializer(serializers.ModelSerializer):
 class TimeEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeEntry
-        fields = ["id","duration", "user", "project", "entry_date"]
-        read_only_fields = ["id",'created_at', 'updated_at']
+        fields = ["id","duration", "project", "entry_date"]
+        read_only_fields = ["id",'created_at', 'updated_at',"user"]
         extra_kwargs = {'duration': {'required': True}, 'entry_date': {'required': True}}
