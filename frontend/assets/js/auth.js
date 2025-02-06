@@ -78,25 +78,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
         const errorMessage = document.getElementById("error-message");
-
+ 
         try {
-            api.post("token/", { username, password })
-                .then(response => {
-                    if (response.status !== 200) {
-                        alert("Login failed.");
-                        throw new Error("Login failed.");
-                    } else {
-                        localStorage.setItem("accessToken", response.data.access); // Store access token
-                        localStorage.setItem("refreshToken", response.data.refresh); // Store refresh token
-                        localStorage.setItem("username", username);
-                        window.location.href = "pages/time-entries.html"; // Redirect to home
-                    }
-                   
-                })
+            const data = await api.post("token/", { username, password });
+    
+            localStorage.setItem(ACCESS_TOKEN, data.data.access); // Store access token
+            localStorage.setItem(REFRESH_TOKEN, data.data.refresh); // Store refresh token
+            localStorage.setItem("username", username);
+            window.location.href = "pages/time-entries.html"; // Redirect to home
+            }
 
-        } catch (error) {
-            errorMessage.textContent = error.response?.data?.message || "Login failed.";
-            errorMessage.style.display = "block";
+         catch (error) {
+            if (error.response && error.response.status === 401) {
+                errorMessage.textContent = 'Usuario o contraseña incorrecta, por favor inténtelo de nuevo .';
+            } else {
+                errorMessage.textContent = 'Ocurrió un error, por favor inténtelo de nuevo';
+                console.error("Login failed:", error);
+            }
         }
     });
 
