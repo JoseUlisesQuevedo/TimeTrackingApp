@@ -35,6 +35,7 @@ services:
   frontend:
     build:
       context: ./frontend  # Path to the frontend directory
+      dockerfile: Dockerfile.prod
     volumes:
       - ./frontend:/usr/share/nginx/html  # Serve frontend files
       - static_volume:/home/app/web/staticfiles
