@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             //Gets project and relevant time Entries (based on the current week)
             const projects = await fetchProjects();
             const timeEntries = await fetchTimeEntries(start_date, end_date);
-            console.log(timeEntries);
 
             // Clear existing project rows
             projectRowsContainer.innerHTML = '';
