@@ -2,18 +2,6 @@ version: '3.8'
 
 services:
   # Django Backend (API)
-  db:
-    image: postgres:17
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5435:5432"
-    env_file:
-      - .env
-    networks:
-      - backend
-  
-
   web:
     build:
       context: ./backend
@@ -25,9 +13,6 @@ services:
       - .env
     volumes:
       - static_volume:/home/app/web/staticfiles
-  
-    depends_on:
-      - db
     networks:
       - backend
 
@@ -49,7 +34,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
-    external: true
-    name: 854e6f6b3115ef9acba43d0cfb648a4b0588b0f5a238a80c326597a7740327c4
   static_volume:

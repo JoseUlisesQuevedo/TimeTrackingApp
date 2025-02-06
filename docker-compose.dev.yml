@@ -1,17 +1,7 @@
 version: '3.8'
 
 services:
-  # Django Backend (API)
-  db:
-    image: postgres:17
-    volumes:
-      - postgres_dev_data:/var/lib/postgresql/data
-    env_file:
-      - .env.dev
-    networks:
-      - backend
   
-
   web:
     build: ./backend
     command: python manage.py runserver 0.0.0.0:8000
@@ -19,8 +9,6 @@ services:
       - "8000:8000"
     env_file:
       - .env.dev
-    depends_on:
-      - db
     networks:
       - backend
 
@@ -40,5 +28,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_dev_data:
   static_volume:
