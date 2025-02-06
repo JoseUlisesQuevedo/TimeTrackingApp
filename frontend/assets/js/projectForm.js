@@ -23,7 +23,10 @@ import { formatProjects, renderProjects } from './projectCards.js';
 
             let editingProjectId = localStorage.getItem('editingProjectId');
 
-            if (editingProjectId !== "null") {
+            console.log(editingProjectId);
+
+            if (editingProjectId !== "null" && editingProjectId !== null) {
+                console.log('Updating project');
                 // Update existing project
                 // Remove any null or empty values from projectData
                 Object.keys(projectData).forEach(key => {
