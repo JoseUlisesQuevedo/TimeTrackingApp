@@ -85,7 +85,8 @@ export class ProjectRow {
 
         row.querySelector('.remove-project').addEventListener('click',async () => {
 
-            if(!confirm('Are you sure you want to remove this project? This will delete time entries for multiple days. This cannot be undone!')) return;
+            const hasEntries = Array.from(row.querySelectorAll('.time-input input')).some(input => input.value !== '');
+            if (hasEntries && !confirm('Are you sure you want to remove this project? This will delete time entries for multiple days. This cannot be undone!')) return;
 
             const entryIds = [];
             row.querySelectorAll('.time-input').forEach(inputDiv => {
@@ -133,7 +134,7 @@ export class ProjectRow {
 
         projectId = parseInt(projectId, 10);
         if (this.projectRows.has(projectId)) {
-            alert('This project is already added' + "id:" + projectId);
+            alert('This project is already added');
             emptyRow.querySelector('select').value = '';
             return;
         }
