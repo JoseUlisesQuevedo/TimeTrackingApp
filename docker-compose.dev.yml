@@ -5,27 +5,20 @@ services:
   db:
     image: postgres:17
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5435:5432"
+      - postgres_dev_data:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env.dev
     networks:
       - backend
   
 
   web:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.prod
-    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    build: ./backend
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     env_file:
-      - .env
-    volumes:
-      - static_volume:/home/app/web/staticfiles
-  
+      - .env.dev
     depends_on:
       - db
     networks:
@@ -37,7 +30,6 @@ services:
       context: ./frontend  # Path to the frontend directory
     volumes:
       - ./frontend:/usr/share/nginx/html  # Serve frontend files
-      - static_volume:/home/app/web/staticfiles
     ports:
       - "80:80"  # Expose Nginx on port 80
     networks:
@@ -48,7 +40,5 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
-    external: true
-    name: 854e6f6b3115ef9acba43d0cfb648a4b0588b0f5a238a80c326597a7740327c4
+  postgres_dev_data:
   static_volume:
