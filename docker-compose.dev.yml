@@ -13,7 +13,7 @@ services:
       - backend
 
     volumes:
-      - ./backend:/app/backend
+      - ./backend:/app
 
   # Nginx Frontend
   frontend:
