@@ -38,9 +38,11 @@ import { formatProjects, renderProjects } from './projectCards.js';
                 api.patch(`projects/update/${editingProjectId}/`, projectData)
                     .then(async response => {
                         if (response.status === 200) {
-                            let projects = await fetchProjects();
+                            
+                            let projects = await fetchProjects(true);
                             let users = await fetchUsers();
                             projects = formatProjects(projects, users);
+
                             renderProjects(projects);
                             resetForm();
                         }
@@ -60,7 +62,7 @@ import { formatProjects, renderProjects } from './projectCards.js';
                 api.post("projects/", projectData)
                     .then(async response => {
                         if (response.status === 201) {
-                            let projects = await fetchProjects();
+                            let projects = await fetchProjects(true);
                             let users = await fetchUsers();
                             projects = formatProjects(projects, users);
                             renderProjects(projects);

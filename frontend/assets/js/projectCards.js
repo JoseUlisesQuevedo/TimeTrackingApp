@@ -86,19 +86,64 @@ export function createProjectCard(project) {
         </div>
     `;
 
-    card.querySelector('.delete-project').addEventListener('click', async () => {
-        if (confirm(`Are you sure you want to delete this project?`)) {
-
-            //Remove the project from the DB and refresh the page/projects
-            const response = await api.delete(`projects/delete/${project.id}/`);
-            if (response.status === 204) {
-               let projects = await fetchProjects();
-               let users = await fetchUsers();
-               projects = formatProjects(projects, users);
-               renderProjects(projects);
+    card.querySelector('.delete-project').addEventListener('click', async (event) => {
+        // Prevent any default behavior
+        event.preventDefault();
+        
+        // Immediate visual feedback
+        alert("Starting delete process"); // This will help us confirm the handler is running
+        
+        try {
+          if (!confirm(`Are you sure you want to delete this project?`)) {
+            alert("Delete cancelled");
+            return;
+          }
+      
+          // Add visual feedback before API call
+          alert("Sending delete request");
+          
+          // Log the project ID we're trying to delete
+          alert(`Attempting to delete project ${project.id}`);
+          
+          const response = await api.delete(`projects/delete/${project.id}/`);
+          
+          // Immediate check of response
+          alert(`Delete response received: ${response.status}`);
+      
+          if (response.status === 204) {
+            // Explicitly handle each async operation
+            let projects;
+            try {
+              projects = await fetchProjects(true);
+              alert("Projects fetched successfully");
+            } catch (fetchError) {
+              alert(`Error fetching projects: ${fetchError.message}`);
+              throw fetchError;
             }
-
-
+      
+            let users;
+            try {
+              users = await fetchUsers();
+              alert("Users fetched successfully");
+            } catch (fetchError) {
+              alert(`Error fetching users: ${fetchError.message}`);
+              throw fetchError;
+            }
+      
+            try {
+              const formattedProjects = formatProjects(projects, users);
+              renderProjects(formattedProjects);
+              alert("Render complete");
+            } catch (formatError) {
+              alert(`Error formatting/rendering: ${formatError.message}`);
+              throw formatError;
+            }
+          } else {
+            alert(`Unexpected response status: ${response.status}`);
+          }
+        } catch (error) {
+          alert(`Error in delete handler: ${error.message}`);
+          console.error("Full error:", error);
         }
     });
 

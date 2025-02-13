@@ -59,12 +59,25 @@ export async function fetchUsers() {
 
 
 //Gets the projects from the BD and stores them / updates them in the local storage
-export async function fetchProjects() {
+export async function fetchProjects(noCache = false) {
+    
+    const CACHE_EXPIRY_SHORT = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+    if (!noCache) {
+        const cachedProjects = JSON.parse(localStorage.getItem("cached_projects"));
+        const cacheTime = localStorage.getItem("project_cache_timestamp");
+
+        if (cachedProjects && cacheTime && Date.now() - cacheTime < CACHE_EXPIRY_SHORT) {
+            return cachedProjects;
+        }
+    }
+
     try {
         const response = await api.get('projects/');
-        if (response.status===200) {
-            return await response.data;
-             
+        if (response.status === 200) {
+            localStorage.setItem("cached_projects", JSON.stringify(response.data));
+            localStorage.setItem("project_cache_timestamp", Date.now().toString());
+            return response.data;
         }
         throw new Error('Failed to get projects');
     } catch (error) {
