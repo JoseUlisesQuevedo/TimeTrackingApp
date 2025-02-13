@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Tracker</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type = "image/png" href="{% static 'img/favicon.png' %}">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="sidebar-header">
+                    <h2>dive's Time Tracker</h2>
+                </div>
+                <ul class="menu-items">
+                    <li class="menu-item active">
+                        <a href="{% url 'time_entries' %}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Timesheets
+                            <script>
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    const authToken = localStorage.getItem('authToken');
+                                });
+                            </script>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'project_details' %}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            Crear proyectos
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="container">
+                <header>
+                    <h1>Timesheets</h1>
+                    <div class="calendar-navigation">
+                        <button class="nav-btn" id="prev-week">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"/>
+                            </svg>
+                        </button>
+                        <div class="current-week">
+                            <button id="week-picker">
+                                <span id="week-display"></span>
+                            </button>
+                            <input type="date" id="week-picker-input">
+                        </div>
+                        <button class="nav-btn" id="next-week">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="time-grid">
+                    <div class="grid-layout">
+                        <div class="project-column">
+                            <div class="column-header">Project</div>
+                        </div>
+                        <div class="days-header">
+                            <div class="day-label">Monday</div>
+                            <div class="day-label">Tuesday</div>
+                            <div class="day-label">Wednesday</div>
+                            <div class="day-label">Thursday</div>
+                            <div class="day-label">Friday</div>
+                        </div>
+                    </div>
+
+                    <div id="project-rows">
+                        <!-- Project rows will be added here dynamically -->
+                    </div>
+
+                    <button id="save-time" class="save-button">Save Time Entries</button>
+                </div>
+
+                <footer>
+                    <div class="total-time">
+                        <h3>Total Time This Week: <span id="total-hours">0h 00m</span></h3>
+                    </div>
+                </footer>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="{% static 'js/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="{% static 'js/auth.js' %}" defer></script>
+</body>
+</html>
