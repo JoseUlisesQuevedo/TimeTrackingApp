@@ -4,14 +4,14 @@ FROM python:3.10-slim
 WORKDIR /app
 
 RUN pip install --upgrade pip
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN apt-get update && apt-get install 
 
-COPY . .
+COPY backend/ .
 
-COPY entrypoint.sh .
+COPY backend/entrypoint.sh .
 RUN sed -i 's/\r$//g' entrypoint.sh
 RUN chmod +x entrypoint.sh
 
@@ -21,6 +21,7 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 
