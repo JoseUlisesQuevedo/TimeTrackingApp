@@ -16,7 +16,7 @@ RUN pip install --upgrade pip
 COPY . .
 
 
-COPY requirements.txt .
+COPY ./backend/requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /wheels -r requirements.txt
 
 ###
@@ -42,15 +42,16 @@ COPY --from=builder /app/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
-COPY entrypoint.sh $APP_HOME
+COPY backend/entrypoint.sh $APP_HOME
 RUN sed -i 's/\r$//g' $APP_HOME/entrypoint.sh
 RUN chmod +x entrypoint.sh
 
-COPY . $APP_HOME
+COPY ./backend $APP_HOME
 RUN chown -R app:app $APP_HOME
 
 USER app
 
 ENTRYPOINT ["./entrypoint.sh"]
+CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "6", "--threads", "4"]
 
 
