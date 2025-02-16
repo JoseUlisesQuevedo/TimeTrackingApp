@@ -9,8 +9,6 @@ services:
     env_file:
       - dev.env
 
-    volumes:
-      - ./backend:/app
 
  
 

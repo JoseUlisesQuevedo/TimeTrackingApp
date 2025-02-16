@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 
-#load_dotenv()
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +40,7 @@ DEBUG = bool(os.environ.get('DEBUG', False))
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(' ')
 print(ALLOWED_HOSTS)
+print(SECRET_KEY)
 
 # Defines authentication classes
 REST_FRAMEWORK = {
@@ -77,12 +78,12 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -170,8 +171,9 @@ CORS_ALLOW_CREDENTIALS = True
 
 SECURE_SSL_REDIRECT = os.getenv('SESSION_COOKIE_SECURE', False)
 SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', False)
-CSRF_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', False)
 
+CSRF_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', False)
+print(CSRF_COOKIE_SECURE)
 #HSTS settings
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_PRELOAD = os.getenv('SECURE_HSTS_PRELOAD', False)

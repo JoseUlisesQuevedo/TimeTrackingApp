@@ -3,7 +3,7 @@ import { CACHE_EXPIRY } from "./constants.js";
 
 
 const api = axios.create({
-    baseURL:"http://127.0.0.1:8000/api/",  // Replace with your actual API URL
+    baseURL:"/api/",  // Replace with your actual API URL
     headers: {
         "Content-Type": "application/json",
     },
