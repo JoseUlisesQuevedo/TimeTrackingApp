@@ -59,12 +59,12 @@ function checkAuth() {
 }
 
 function redirectToLogin() {
-    window.location.href = "/index.html";
+    window.location.href = "/";
 }
 
 // Run authentication check when the page loads
 document.addEventListener("DOMContentLoaded", () => {
-    if (window.location.pathname !== "/index.html" && window.location.pathname !== "/") {
+    if (window.location.pathname !== "/index" && window.location.pathname !== "/") {
         checkAuth();
     }
     else{

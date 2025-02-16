@@ -3,3 +3,4 @@
 *cpython*
 *.env
 */staticfiles/*
+secrets.yml
