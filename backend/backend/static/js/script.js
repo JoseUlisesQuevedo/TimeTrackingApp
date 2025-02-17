@@ -1,6 +1,6 @@
 import { fetchProjects, fetchTimeEntries } from './api.js';
 import { getWeekDates, formatDate, formatWeekDisplay, formatDateForInput } from './dateUtils.js';
-import { updateTotalHours,saveTimeEntries } from './timeEntries.js';
+import { updateTotalHours, saveTimeEntries } from './timeEntries.js';
 import { ProjectRow } from './projectRow.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     let hasUnsavedChanges = false;
 
+
     // Initial empty row
     projectRowsContainer.appendChild(await projectRowManager.createEmptyRow());
 
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.time-input input').forEach(input => {
             input.addEventListener('input', () => {
                 hasUnsavedChanges = true;
+                updateTotalHours();
             });
         });
     }
@@ -28,15 +30,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
         }
     });
-    
 
-    //Gets the current week's projects and entries
-    async function loadProjectsAndEntries(projectRowManager,start_date = null, end_date = null) {
+    // Gets the current week's projects and entries
+    async function loadProjectsAndEntries(projectRowManager, start_date = null, end_date = null) {
+            // Show loading animation
+        document.querySelector('.time-grid').classList.add('loading');
         try {
             // Create a new instance of ProjectRowManager
             
-            
-            //Gets project and relevant time Entries (based on the current week)
+            // Gets project and relevant time Entries (based on the current week)
             const projects = await fetchProjects();
             const timeEntries = await fetchTimeEntries(start_date, end_date);
 
@@ -57,9 +59,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             setTimeout(() => {
                 updateTotalHours();
-            }, 1000);
+                document.querySelector('.time-grid').classList.remove('loading');
+
+            }, 120);
 
             detectChanges();
+
 
         } catch (error) {
             console.error('Error loading projects and entries:', error);
@@ -67,23 +72,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function populateProjectRowWithHours(row, entries) {
-
         const timeInputs = row.querySelectorAll('.time-input');
 
-
         entries.forEach(entry => {
-
             const entryDate = new Date(entry.entry_date + 'T06:00:00');
             const inputIndex = currentWeekDates.findIndex(date => date.toDateString() === entryDate.toDateString());
             if (inputIndex !== -1) {
-            const totalMinutes = entry.duration;
-            const hours = Math.floor(totalMinutes / 60);
-            const minutes = totalMinutes % 60;
-            const timeInput = timeInputs[inputIndex];
-            
-            timeInput.querySelector('.hours-input').value = hours;
-            timeInput.querySelector('.minutes-input').value = minutes;
-            timeInput.dataset.entryId = entry.id; // Add entry.id to the relevant timeInput
+                const totalMinutes = entry.duration;
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+                const timeInput = timeInputs[inputIndex];
+                
+                timeInput.querySelector('.hours-input').value = hours;
+                timeInput.querySelector('.minutes-input').value = minutes;
+                timeInput.dataset.entryId = entry.id; // Add entry.id to the relevant timeInput
             }
         });
     }
@@ -104,18 +106,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.currentWeekDates = dates;
     }
 
+    
+
     // Event Listeners
     document.getElementById('prev-week').addEventListener('click', () => {
         if (hasUnsavedChanges && !confirm('You have unsaved changes. Are you sure you want to navigate away?')) {
             return;
         }
 
+     
+
         hasUnsavedChanges = false;
         currentDate.setDate(currentDate.getDate() - 7);
         currentWeekDates = getWeekDates(currentDate);
         updateWeekDisplay(currentWeekDates); 
         projectRowManager.clearProjectRows();
-        loadProjectsAndEntries(projectRowManager,currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
+        loadProjectsAndEntries(projectRowManager, currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1])
     });
 
     document.getElementById('next-week').addEventListener('click', () => {
@@ -123,12 +129,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        // Show loading animation
+
+
         hasUnsavedChanges = false;
         currentDate.setDate(currentDate.getDate() + 7);
         currentWeekDates = getWeekDates(currentDate);
         updateWeekDisplay(currentWeekDates); 
         projectRowManager.clearProjectRows();
-        loadProjectsAndEntries(projectRowManager,currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
+        loadProjectsAndEntries(projectRowManager, currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1])
     });
 
     const weekPickerInput = document.getElementById('week-picker-input');
@@ -139,10 +148,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentWeekDates = getWeekDates(currentDate);
         updateWeekDisplay(currentWeekDates);
         projectRowManager.clearProjectRows();
-        loadProjectsAndEntries(projectRowManager,currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
-
+        loadProjectsAndEntries(projectRowManager, currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
     });
-
 
     document.getElementById('save-time').addEventListener('click', () => {
         const projectRows = projectRowManager.getProjectRows();
@@ -166,9 +173,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    document.getElementById('current-week-btn').addEventListener('click', () => {
+        if (hasUnsavedChanges && !confirm('You have unsaved changes. Are you sure you want to navigate away?')) {
+            return;
+        }
+
+        hasUnsavedChanges = false;
+        currentDate = new Date();
+        currentWeekDates = getWeekDates(currentDate);
+        updateWeekDisplay(currentWeekDates);
+        projectRowManager.clearProjectRows();
+        loadProjectsAndEntries(projectRowManager, currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
+    });
+
     // Initial load
     updateWeekDisplay(currentWeekDates);
-    await loadProjectsAndEntries(projectRowManager,currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
+    await loadProjectsAndEntries(projectRowManager, currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
     setTimeout(() => {
         updateTotalHours();
     }, 1000);

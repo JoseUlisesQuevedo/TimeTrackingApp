@@ -13,7 +13,7 @@
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <div class="sidebar-header">
-                    <h2>dive's Cool New Time Tracker</h2>
+                    <h2>dive's New Time Tracker</h2>
                 </div>
                 <ul class="menu-items">
                     <li class="menu-item active">
@@ -65,26 +65,48 @@
                                 <path d="M9 18l6-6-6-6"/>
                             </svg>
                         </button>
+                        <button class="nav-btn" id="current-week-btn">Go to Current Week</button>
                     </div>
                 </header>
 
                 <div class="time-grid">
+                    <div class="loader-overlay">
+                        <div class="loader"></div>
+                    </div>
+                    <div class="time-grid-content">
                     <div class="grid-layout">
                         <div class="project-column">
                             <div class="column-header">Project</div>
                         </div>
                         <div class="days-header">
-                            <div class="day-label">Monday</div>
-                            <div class="day-label">Tuesday</div>
-                            <div class="day-label">Wednesday</div>
-                            <div class="day-label">Thursday</div>
-                            <div class="day-label">Friday</div>
+                            <div class="day-column">
+                                <div class="day-label">Monday</div>
+                                <div class="day-total" id="total-monday">0h 00m</div>
+                            </div>
+                            <div class="day-column">
+                                <div class="day-label">Tuesday</div>
+                                <div class="day-total" id="total-tuesday">0h 00m</div>
+                            </div>
+                            <div class="day-column">
+                                <div class="day-label">Wednesday</div>
+                                <div class="day-total" id="total-wednesday">0h 00m</div>
+                            </div>
+                            <div class="day-column">
+                                <div class="day-label">Thursday</div>
+                                <div class="day-total" id="total-thursday">0h 00m</div>
+                            </div>
+                            <div class="day-column">
+                                <div class="day-label">Friday</div>
+                                <div class="day-total" id="total-friday">0h 00m</div>
+                            </div>
                         </div>
                     </div>
-
+                    
                     <div id="project-rows">
                         <!-- Project rows will be added here dynamically -->
                     </div>
+
+                  
 
                     <button id="save-time" class="save-button">Save Time Entries</button>
                 </div>
@@ -94,6 +116,7 @@
                         <h3>Total Time This Week: <span id="total-hours">0h 00m</span></h3>
                     </div>
                 </footer>
+            </div>
             </div>
         </main>
     </div>

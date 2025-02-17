@@ -11,6 +11,8 @@ export function updateTotalHours() {
         total += getTimeInHours(hoursInput, minutesInput);
     });
     document.getElementById('total-hours').textContent = formatTimeDisplay(total);
+    updateDayTotals();
+    updateRowTotals();
 }
 
 export function populateTimeEntries(entries,projects) { 
@@ -24,6 +26,46 @@ export function populateTimeEntries(entries,projects) {
         minutesInput.value = (entry.hours % 1) * 60;
     });
     updateTotalHours();
+}
+
+function updateDayTotals() {
+        const dayTotals = [0, 0, 0, 0, 0];
+        document.querySelectorAll('.project-row').forEach(row => {
+            row.querySelectorAll('.time-input').forEach((inputDiv, index) => {
+                const hours = parseInt(inputDiv.querySelector('.hours-input').value) || 0;
+                const minutes = parseInt(inputDiv.querySelector('.minutes-input').value) || 0;
+                dayTotals[index] += hours * 60 + minutes;
+            });
+        });
+
+        dayTotals.forEach((total, index) => {
+            const hours = Math.floor(total / 60);
+            const minutes = total % 60;
+            document.getElementById(`total-${['monday', 'tuesday', 'wednesday', 'thursday', 'friday'][index]}`).textContent = `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+        });
+    }
+
+function updateRowTotals() {
+    document.querySelectorAll('.project-row').forEach(row => {
+        let totalMinutes = 0;
+        row.querySelectorAll('.time-input').forEach(inputDiv => {
+            const hours = parseInt(inputDiv.querySelector('.hours-input').value) || 0;
+            const minutes = parseInt(inputDiv.querySelector('.minutes-input').value) || 0;
+            totalMinutes += hours * 60 + minutes;
+        });
+
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        const totalDiv = row.querySelector('.project-total');
+        if (totalDiv) {
+            totalDiv.textContent = `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+        } else {
+            const newTotalDiv = document.createElement('div');
+            newTotalDiv.className = 'project-total';
+            newTotalDiv.textContent = `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+            row.appendChild(newTotalDiv);
+        }
+    });
 }
 
 
