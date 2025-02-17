@@ -63,6 +63,7 @@ button:hover {
 }
 
 .time-grid {
+    position: relative;
     background-color: white;
     padding: 2rem;
     border-radius: 10px;
@@ -642,4 +643,56 @@ footer {
 .project-form-container h2 {
     margin-bottom: 1.5rem;
     color: #3A5781;
+}
+
+
+/* Loader */
+.loader {
+    width: 45px;
+    aspect-ratio: 1;
+    --c: no-repeat linear-gradient(#000 0 0);
+    background: 
+      var(--c) 0%   50%,
+      var(--c) 50%  50%,
+      var(--c) 100% 50%;
+    background-size: 20% 100%;
+    animation: l1 1s infinite linear;
+}
+
+@keyframes l1 {
+    0%  {background-size: 20% 100%,20% 100%,20% 100%}
+    33% {background-size: 20% 10% ,20% 100%,20% 100%}
+    50% {background-size: 20% 100%,20% 10% ,20% 100%}
+    66% {background-size: 20% 100%,20% 100%,20% 10% }
+    100%{background-size: 20% 100%,20% 100%,20% 100%}
+}
+
+/* Loader Overlay */
+.loader-overlay {
+    display: none; /* Ensure it's hidden by default */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.time-grid:not(.loading) .loader-overlay {
+    display: none !important;
+}
+
+.time-grid.loading .loader-overlay {
+    display: flex !important;}
+
+/* Hide content when loading */
+.loading .time-grid-content {
+    visibility: hidden;
+}
+.loading .loader-overlay {
+    display: flex;
 }
