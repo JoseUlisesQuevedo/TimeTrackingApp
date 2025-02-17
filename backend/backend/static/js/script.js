@@ -166,6 +166,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    document.getElementById('current-week-btn').addEventListener('click', () => {
+        if (hasUnsavedChanges && !confirm('You have unsaved changes. Are you sure you want to navigate away?')) {
+            return;
+        }
+
+        console.log('current week');
+
+        hasUnsavedChanges = false;
+        currentDate = new Date();
+        currentWeekDates = getWeekDates(currentDate);
+        updateWeekDisplay(currentWeekDates);
+        projectRowManager.clearProjectRows();
+        loadProjectsAndEntries(projectRowManager, currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
+    });
+
     // Initial load
     updateWeekDisplay(currentWeekDates);
     await loadProjectsAndEntries(projectRowManager,currentWeekDates[0], currentWeekDates[currentWeekDates.length - 1]);
