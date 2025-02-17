@@ -20,7 +20,8 @@ class Project(models.Model):
         ('RI', 'Research Initiative'),
         #Things like learning or mentorship
         ('II', 'Internal Initiative'),
-        ('OTH', 'Other')
+        ('OTH', 'Other'),
+        ("CA","Client Acquisition")
     ]
     area = models.CharField(
     max_length=3, choices=AREA_CHOICES,null=True,default='OTH')
