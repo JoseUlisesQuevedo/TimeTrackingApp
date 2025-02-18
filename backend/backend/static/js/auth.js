@@ -64,9 +64,20 @@ function redirectToLogin() {
 
 // Run authentication check when the page loads
 document.addEventListener("DOMContentLoaded", () => {
-    if (window.location.pathname !== "/index" && window.location.pathname !== "/") {
-        checkAuth();
-    }
+    console.log(window.location.pathname);
+        if (window.location.pathname !== "/index" && window.location.pathname !== "/login/" && window.location.pathname !== "/") {
+            checkAuth();
+            const logoutButton = document.getElementById("logout-btn");
+            if (logoutButton) {
+                console.log("added event listener");
+                logoutButton.addEventListener("click", () => {
+                    console.log("logging out!");
+                    localStorage.removeItem(ACCESS_TOKEN);
+                    localStorage.removeItem(REFRESH_TOKEN);
+                    window.location.href = "/";
+                });
+            }
+        }
     else{
 
     const loginForm = document.getElementById("login-form");
