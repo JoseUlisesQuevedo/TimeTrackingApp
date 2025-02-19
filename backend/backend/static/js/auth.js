@@ -119,6 +119,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+
+    const forgotPasswordLink = document.getElementById("forgot-password-text");
+    
+    forgotPasswordLink.addEventListener("click", async (event) => {
+        const errorMessage = document.getElementById("error-message");
+        errorMessage.textContent = 'Para restablecer su contraseña, contacte a quien mantiene este sistema. Actualmente esa persona es ulises@dive.ai';
+    });
 });
 
 
