@@ -199,6 +199,19 @@ button:hover {
     box-shadow: 0 2px 6px rgba(58, 87, 129, 0.3);
 }
 
+.logout-button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    background: #4885CE;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
 .entries-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr);

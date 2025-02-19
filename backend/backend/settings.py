@@ -19,7 +19,9 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+LOGIN_REDIRECT_URL = '/time_entries/'
+LOGIN_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/login/'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -41,6 +43,19 @@ DEBUG = bool(os.environ.get('DEBUG', False))
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(' ')
 print(ALLOWED_HOSTS)
 print(SECRET_KEY)
+
+#SMTP Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp-mail.outlook.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "ulises@dive.ai"
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = "ulises@dive.ai"
+
+
+
+
 
 # Defines authentication classes
 REST_FRAMEWORK = {
@@ -171,6 +186,12 @@ CORS_ALLOW_CREDENTIALS = True
 
 SECURE_SSL_REDIRECT = os.getenv('SESSION_COOKIE_SECURE', False)
 SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', False)
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://timetracking-dev.dive.ai",
+    "https://timetracking.dive.ai",
+]
+
 
 CSRF_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', False)
 print(CSRF_COOKIE_SECURE)

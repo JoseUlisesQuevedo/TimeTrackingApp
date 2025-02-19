@@ -19,11 +19,14 @@ from django.urls import path, include
 from api.views import CreateUserView,UserList
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("",views.index, name="index"),
+    path("login/",views.index, name="login"),
     path("projects/", views.projects, name="project_details"),
+    path("logout/", auth_views.logout_then_login, name="logout"),
     path("time_entries/", views.time_entry, name="time_entries"),
     path('api/user/create/', CreateUserView.as_view(), name='create_user'),
     path("api/token/", TokenObtainPairView.as_view(), name="get_auth_token"),
@@ -31,4 +34,10 @@ urlpatterns = [
     path("api/users/", UserList.as_view(), name="user_list"),
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include("api.urls")),
+    path('password_reset/', 
+         auth_views.PasswordResetView.as_view(template_name='registration/password_reset_view.html'), 
+         name='password_reset'),
+    path("password_change/", auth_views.PasswordChangeView.as_view(
+                                                                   success_url="/time_entries/"), name="password_change"),
+    path("", include("django.contrib.auth.urls")),
 ]

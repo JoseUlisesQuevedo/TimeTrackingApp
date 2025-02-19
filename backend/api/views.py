@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
+import json
 from .serializers import UserSerializer, ProjectSerializer, TimeEntrySerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Project, TimeEntry
+from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login
+from django.views.decorators.csrf import csrf_protect
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -86,3 +90,17 @@ class ProjectUpdateView(generics.RetrieveUpdateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]  # Requires authentication
+
+def loginUser(request):
+    
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            print("User logged in")
+            return redirect('time_entries')
+        else:
+            return redirect('login')
