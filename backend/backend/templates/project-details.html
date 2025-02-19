@@ -33,6 +33,9 @@
                         {% csrf_token %}
                         <button type="submit" class="logout-button" id="logout-btn">Logout</button>
                     </form>
+                    <a href="{% url 'password_change' %}">
+                        <button type="button" class="logout-button" id="change-pwd-btn">Change password</button>
+                    </a>
                 </footer>
             </nav>
         </aside>
@@ -116,6 +119,5 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type ="module" src="{% static 'js/project-details.js' %}"></script>
-    <script type="module" src="{% static 'js/auth.js' %}" defer></script>
 </body>
 </html>
