@@ -36,7 +36,7 @@ async function refreshTokenCall() {
     }
 }
 
-function checkAuth() {
+export default function checkAuth() {
 
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (!token) {
@@ -62,26 +62,15 @@ function redirectToLogin() {
     window.location.href = "/";
 }
 
+console.log("Oh this is running baby");
 // Run authentication check when the page loads
 document.addEventListener("DOMContentLoaded", () => {
-    console.log(window.location.pathname);
-        if (window.location.pathname !== "/index" && window.location.pathname !== "/login/" && window.location.pathname !== "/") {
-            checkAuth();
-            const logoutButton = document.getElementById("logout-btn");
-            if (logoutButton) {
-                console.log("added event listener");
-                logoutButton.addEventListener("click", () => {
-                    console.log("logging out!");
-                    localStorage.removeItem(ACCESS_TOKEN);
-                    localStorage.removeItem(REFRESH_TOKEN);
-                    window.location.href = "/";
-                });
-            }
-        }
-    else{
 
     const loginForm = document.getElementById("login-form");
 
+    if (!loginForm) {
+        return;
+    }
     loginForm.addEventListener("submit", async (event) => {
 
         event.preventDefault();
@@ -92,7 +81,29 @@ document.addEventListener("DOMContentLoaded", () => {
  
         try {
             const data = await api.post("token/", { username, password });
-    
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.startsWith(name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            const csrftoken = getCookie('csrftoken');
+            await api.post("loginUser/", { "username": username, "password": password }, {
+                headers: {
+                    "X-CSRFToken": csrftoken,
+                    "Content-Type": "application/json"
+                }
+            });
+
             localStorage.setItem(ACCESS_TOKEN, data.data.access); // Store access token
             localStorage.setItem(REFRESH_TOKEN, data.data.refresh); // Store refresh token
             localStorage.setItem("username", username);
@@ -108,8 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+});
 
-    }
-    });
 
 
