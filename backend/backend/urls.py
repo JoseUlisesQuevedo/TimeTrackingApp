@@ -38,6 +38,6 @@ urlpatterns = [
          auth_views.PasswordResetView.as_view(template_name='registration/password_reset_view.html'), 
          name='password_reset'),
     path("password_change/", auth_views.PasswordChangeView.as_view(
-                                                                   success_url="/login/"), name="password_change"),
+                                                                   success_url="/time_entries/"), name="password_change"),
     path("", include("django.contrib.auth.urls")),
 ]
