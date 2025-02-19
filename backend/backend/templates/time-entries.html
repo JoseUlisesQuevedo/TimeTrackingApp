@@ -31,10 +31,10 @@
                 <footer class="sidebar-footer">
                     <form action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="logout-button" id="logout-btn">Logout</button>
+                        <button type="submit" class="logout-button" id="logout-btn">Cerrar sesión</button>
                     </form>
                     <a href="{% url 'password_change' %}">
-                        <button type="button" class="logout-button" id="change-pwd-btn">Change password</button>
+                        <button type="button" class="logout-button" id="change-pwd-btn">Cambiar contraseña</button>
                     </a>
             </nav>
         </aside>
@@ -60,7 +60,7 @@
                                 <path d="M9 18l6-6-6-6"/>
                             </svg>
                         </button>
-                        <button class="nav-btn" id="current-week-btn">Go to Current Week</button>
+                        <button class="nav-btn" id="current-week-btn">Ir a semana actual</button>
                     </div>
                 </header>
 
@@ -71,27 +71,27 @@
                     <div class="time-grid-content">
                     <div class="grid-layout">
                         <div class="project-column">
-                            <div class="column-header">Project</div>
+                            <div class="column-header">Proyecto</div>
                         </div>
                         <div class="days-header">
                             <div class="day-column">
-                                <div class="day-label">Monday</div>
+                                <div class="day-label">Lunes</div>
                                 <div class="day-total" id="total-monday">0h 00m</div>
                             </div>
                             <div class="day-column">
-                                <div class="day-label">Tuesday</div>
+                                <div class="day-label">Martes</div>
                                 <div class="day-total" id="total-tuesday">0h 00m</div>
                             </div>
                             <div class="day-column">
-                                <div class="day-label">Wednesday</div>
+                                <div class="day-label">Miércoles</div>
                                 <div class="day-total" id="total-wednesday">0h 00m</div>
                             </div>
                             <div class="day-column">
-                                <div class="day-label">Thursday</div>
+                                <div class="day-label">Jueves</div>
                                 <div class="day-total" id="total-thursday">0h 00m</div>
                             </div>
                             <div class="day-column">
-                                <div class="day-label">Friday</div>
+                                <div class="day-label">Viernes</div>
                                 <div class="day-total" id="total-friday">0h 00m</div>
                             </div>
                         </div>
@@ -108,7 +108,7 @@
 
                 <footer>
                     <div class="total-time">
-                        <h3>Total Time This Week: <span id="total-hours">0h 00m</span></h3>
+                        <h3>Tiempo total esta semana: <span id="total-hours">0h 00m</span></h3>
                     </div>
                 </footer>
             </div>
@@ -117,9 +117,5 @@
     </div>
     <script type="module" src="{% static 'js/script.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module">
-        import  checkAuth from '{% static "js/auth.js" %}';
-        checkAuth();
-    </script>
 </body>
 </html>

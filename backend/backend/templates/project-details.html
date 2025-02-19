@@ -31,10 +31,10 @@
                 <footer class="sidebar-footer">
                    <form action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="logout-button" id="logout-btn">Logout</button>
+                        <button type="submit" class="logout-button" id="logout-btn">Cerrar Sesión</button>
                     </form>
                     <a href="{% url 'password_change' %}">
-                        <button type="button" class="logout-button" id="change-pwd-btn">Change password</button>
+                        <button type="button" class="logout-button" id="change-pwd-btn">Cambiar contraseña</button>
                     </a>
                 </footer>
             </nav>
@@ -48,23 +48,23 @@
 
                 <div class="projects-grid">
                     <div class="project-form-container">
-                        <h2>Add New Project</h2>
+                        <h2>Agregar Nuevo Proyecto</h2>
                         <form id="project-form" class="project-form">
                             <div class="form-group">
-                                <label for="project-name">Project Name</label>
+                                <label for="project-name">Nombre</label>
                                 <input type="text" id="project-name" required>
                             </div>
                             <div class="form-group">
-                                <label for="project-description">Description</label>
+                                <label for="project-description">Descripción</label>
                                 <textarea id="project-description" rows="3"></textarea>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="project-start">Start Date</label>
+                                    <label for="project-start">Fecha de inicio</label>
                                     <input type="date" id="project-start">
                                 </div>
                                 <div class="form-group">
-                                    <label for="project-end">End Date</label>
+                                    <label for="project-end">Fecha de fin</label>
                                     <input type="date" id="project-end">
                                 </div>
                             </div>
@@ -103,12 +103,12 @@
                                     </select>
                                 </div>
                             </div>
-                            <button type="submit" class="submit-button">Create Project</button>
+                            <button type="submit" class="submit-button">Crear Proyecto</button>
                         </form>
                     </div>
 
                     <div class="projects-list-container">
-                        <h2>Existing Projects</h2>
+                        <h2>Proyectos</h2>
                         <div class="projects-list" id="projects-list" style="max-height: 550px; overflow-y: auto;"></div>
                             <!-- Projects will be added here dynamically -->
                         </div>
