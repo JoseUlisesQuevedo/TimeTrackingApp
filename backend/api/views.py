@@ -91,7 +91,6 @@ class ProjectUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]  # Requires authentication
 
-@csrf_protect
 def loginUser(request):
     
     if request.method == 'POST':

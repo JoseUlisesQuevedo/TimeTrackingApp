@@ -187,6 +187,12 @@ CORS_ALLOW_CREDENTIALS = True
 SECURE_SSL_REDIRECT = os.getenv('SESSION_COOKIE_SECURE', False)
 SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', False)
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://timetracking-dev.dive.ai",
+    "https://timetracking.dive.ai",
+]
+
+
 CSRF_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', False)
 print(CSRF_COOKIE_SECURE)
 #HSTS settings
