@@ -86,6 +86,9 @@ import { formatProjects, renderProjects } from './projectCards.js';
     }
 
 export function populateUserOptions(users, selectElement) {
+    // Sort users alphabetically by username
+    users.sort((a, b) => a.username.localeCompare(b.username));
+
     users.forEach(user => {
         const option = document.createElement('option');
         option.value = user.id;

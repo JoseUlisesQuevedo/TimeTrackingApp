@@ -27,6 +27,9 @@ export class ProjectRow {
         defaultOption.textContent = 'Select Project';
         select.appendChild(defaultOption);
 
+        // Sort projects alphabetically by project_name
+        projects.sort((a, b) => a.project_name.localeCompare(b.project_name));
+
         // Add stored projects to select
         projects.forEach(project => {
             const option = document.createElement('option');
