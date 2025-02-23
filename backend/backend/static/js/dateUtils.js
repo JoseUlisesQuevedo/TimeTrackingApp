@@ -54,9 +54,6 @@ export function getWeekDates(date) {
     for (let i = 0; i < 5; i++) {
         const day = new Date(monday);
         day.setDate(monday.getDate() + i);
-        if (i === 4) {
-            day.setHours(23, 59, 59, 999); // Set last day to 23:59:59
-        }
         dates.push(day);
     }
     return dates;
