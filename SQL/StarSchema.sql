@@ -45,11 +45,10 @@ CREATE TABLE star.fact_time_entries (
 
 
 
-
+select * from star.dim_date
 
 INSERT INTO star.dim_date (date_id, full_date, year, month, month_name, week, day_of_week)
 SELECT 
-    EXTRACT(YEAR FROM d) * 10000 + EXTRACT(MONTH FROM d) * 100 + EXTRACT(DAY FROM d) AS date_id,
     d AS full_date,
     EXTRACT(YEAR FROM d) AS year,
     EXTRACT(MONTH FROM d) AS month,
@@ -120,5 +119,20 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA star
 GRANT SELECT ON TABLES TO timetrackingapp;
 
 
+select * from api_timeentry at2 
+where at2.user_id = 4
+
 
 select * from public.auth_user au 
+
+
+
+
+
+
+
+select * from public.api_timeentry at2 
+
+set entry_date = 2025
+
+
