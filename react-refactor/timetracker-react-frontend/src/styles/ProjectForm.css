@@ -1,0 +1,79 @@
+.project-form-container 
+{
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #B3D5E8;
+}
+
+
+.project-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.project-form label {
+    color: #3A5781;
+    font-weight: 500;
+}
+
+.project-form input,
+.project-form textarea,
+.project-form select {
+    padding: 0.75rem;
+    border: 1px solid #669BC4;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #3A5781;
+}
+
+.project-form input:focus,
+.project-form textarea:focus,
+.project-form select:focus {
+    outline: none;
+    border-color: #4885CE;
+    box-shadow: 0 0 0 2px rgba(72, 133, 206, 0.2);
+}
+
+.submit-button,
+.cancel-button {
+    background-color: #4885CE;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.submit-button:hover {
+    background-color: #3A5781;
+}
+
+.cancel-button {
+    background-color: #6c757d;
+    
+}
+
+.cancel-button:hover {
+    background-color: #5a6268;
+}

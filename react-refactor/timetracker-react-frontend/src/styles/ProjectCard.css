@@ -1,0 +1,105 @@
+
+.project-card {
+    background-color: #f8f9fa;
+    border: 1px solid #B3D5E8;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.project-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.project-card-title {
+    font-weight: 600;
+    color: #3A5781;
+}
+
+.project-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background-color: #B3D5E8;
+    color: #3A5781;
+}
+
+.status-on-hold {
+    background-color: #FFE4B5;
+    color: #CD853F;
+}
+
+.status-completed {
+    background-color: #98FB98;
+    color: #228B22;
+}
+
+.project-card-body {
+    padding: 0.5rem 0;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.project-card-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #669BC4;
+}
+
+
+.project-details {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #B3D5E8;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+}
+
+.detail-item {
+    font-size: 0.9rem;
+    color: #3A5781;
+}
+
+.detail-item strong {
+    color: #669BC4;
+}
+
+.project-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.edit-project,
+.delete-project {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    color: white;
+}
+
+.edit-project {
+    background-color: #4885CE;
+}
+
+.edit-project:hover {
+    background-color: #3A5781;
+}
+
+.delete-project {
+    background-color: #E56630;
+}
+
+.delete-project:hover {
+    background-color: #d45520;
+}
