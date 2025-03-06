@@ -584,6 +584,11 @@ footer {
     color: #228B22;
 }
 
+.status-prospect {
+    background-color: #FFD700; /* Sunflower yellow */
+    color: #8B4513; /* Saddle brown */
+}
+
 .project-card-body {
     padding: 0.5rem 0;
     color: #666;
