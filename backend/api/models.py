@@ -29,7 +29,8 @@ class Project(models.Model):
     STATUS_CHOICES = [
         ('active', 'Active'),
         ('on-hold', 'On hold'),
-        ('completed', 'Completed')]
+        ('completed', 'Completed'),
+        ('prospect', 'Prospect'),]
     status = models.CharField(
     max_length=10, choices=STATUS_CHOICES,null=True,default='active')
 
