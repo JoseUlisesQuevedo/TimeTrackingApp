@@ -65,54 +65,56 @@ function redirectToLogin() {
 console.log("Oh this is running baby");
 // Run authentication check when the page loads
 document.addEventListener("DOMContentLoaded", () => {
-
     const loginForm = document.getElementById("login-form");
 
     if (!loginForm) {
         return;
     }
-    loginForm.addEventListener("submit", async (event) => {
 
+    loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
         const errorMessage = document.getElementById("error-message");
- 
+
         try {
-            const data = await api.post("token/", { username, password });
-            function getCookie(name) {
+            const getCookie = (name) => {
                 let cookieValue = null;
                 if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
+                    document.cookie.split(';').forEach(cookie => {
+                        cookie = cookie.trim();
                         if (cookie.startsWith(name + '=')) {
                             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
                         }
-                    }
+                    });
                 }
                 return cookieValue;
-            }
+            };
 
             const csrftoken = getCookie('csrftoken');
-            await api.post("loginUser/", { "username": username, "password": password }, {
-                headers: {
-                    "X-CSRFToken": csrftoken,
-                    "Content-Type": "application/json"
-                }
-            });
 
-            localStorage.setItem(ACCESS_TOKEN, data.data.access); // Store access token
-            localStorage.setItem(REFRESH_TOKEN, data.data.refresh); // Store refresh token
+            // Run both API calls in parallel
+            const [tokenResponse, loginResponse] = await Promise.all([
+                api.post("token/", { username, password }),
+                api.post("loginUser/", { username, password }, {
+                    headers: {
+                        "X-CSRFToken": csrftoken,
+                        "Content-Type": "application/json"
+                    }
+                })
+            ]);
+
+            // Store tokens in local storage
+            localStorage.setItem(ACCESS_TOKEN, tokenResponse.data.access);
+            localStorage.setItem(REFRESH_TOKEN, tokenResponse.data.refresh);
             localStorage.setItem("username", username);
-            window.location.href ="/time_entries"; // Redirect to home
-            }
 
-         catch (error) {
+            // Redirect
+            window.location.href = "/time_entries";
+        } catch (error) {
             if (error.response && error.response.status === 401) {
-                errorMessage.textContent = 'Usuario o contraseña incorrecta, por favor inténtelo de nuevo .';
+                errorMessage.textContent = 'Usuario o contraseña incorrecta, por favor inténtelo de nuevo.';
             } else {
                 errorMessage.textContent = 'Ocurrió un error, por favor inténtelo de nuevo';
                 console.error("Login failed:", error);
@@ -122,9 +124,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const forgotPasswordLink = document.getElementById("forgot-password-text");
     
-    forgotPasswordLink.addEventListener("click", async (event) => {
-        const errorMessage = document.getElementById("error-message");
-        errorMessage.textContent = 'Para restablecer su contraseña, contacte a quien mantiene este sistema. Actualmente esa persona es ulises@dive.ai';
+    forgotPasswordLink.addEventListener("click", () => {
+        document.getElementById("error-message").textContent = 
+            'Para restablecer su contraseña, contacte a quien mantiene este sistema. Actualmente esa persona es ulises@dive.ai';
     });
 });
 
