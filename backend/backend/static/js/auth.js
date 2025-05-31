@@ -78,7 +78,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
         const errorMessage = document.getElementById("error-message");
- 
+        
+        const submitButton = loginForm.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = `<span class="spinner" style="display:inline-block;width:16px;height:16px;border:2px solid #ccc;border-top:2px solid #333;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px;"></span>Logging you in`;
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }`;
+        document.head.appendChild(style);
+
         try {
             const tokenPromise = api.post("token/", { username, password });
             function getCookie(name) {
@@ -115,9 +128,13 @@ document.addEventListener("DOMContentLoaded", () => {
          catch (error) {
             if (error.response && error.response.status === 401) {
                 errorMessage.textContent = 'Usuario o contraseña incorrecta, por favor inténtelo de nuevo .';
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText; // Reset button text
             } else {
                 errorMessage.textContent = 'Ocurrió un error, por favor inténtelo de nuevo';
                 console.error("Login failed:", error);
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText; // Reset button text
             }
         }
     });
