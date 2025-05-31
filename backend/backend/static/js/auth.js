@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const errorMessage = document.getElementById("error-message");
  
         try {
-            const data = await api.post("token/", { username, password });
+            const tokenPromise = api.post("token/", { username, password });
             function getCookie(name) {
                 let cookieValue = null;
                 if (document.cookie && document.cookie !== '') {
@@ -97,15 +97,17 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const csrftoken = getCookie('csrftoken');
-            await api.post("loginUser/", { "username": username, "password": password }, {
+            const loginPromise =  api.post("loginUser/", { "username": username, "password": password }, {
                 headers: {
                     "X-CSRFToken": csrftoken,
                     "Content-Type": "application/json"
                 }
             });
 
-            localStorage.setItem(ACCESS_TOKEN, data.data.access); // Store access token
-            localStorage.setItem(REFRESH_TOKEN, data.data.refresh); // Store refresh token
+            const [tokenResponse, loginResponse] = await Promise.all([tokenPromise, loginPromise]);
+
+            localStorage.setItem(ACCESS_TOKEN, tokenResponse.data.access); // Store access token
+            localStorage.setItem(REFRESH_TOKEN, tokenResponse.data.refresh); // Store refresh token
             localStorage.setItem("username", username);
             window.location.href ="/time_entries"; // Redirect to home
             }
